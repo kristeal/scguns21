@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "scguns:depleted_diamond_steel_ingot"
+    },
+    {
+      "type": "neoforge:single",
+      "fluid": "create_enchantment_industry:experience",
+      "amount": 3
+    }
+  ],
+  "results": [
+    {
+      "id": "scguns:diamond_steel_ingot"
+    }
+  ]
+}

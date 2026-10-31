@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "c:gunpowders"
+    },
+    {
+      "tag": "scguns:stan_bullet_tips"
+    },
+    {
+      "tag": "scguns:stan_bullet_tips"
+    },
+    {
+      "tag": "scguns:stan_bullet_tips"
+    },
+    {
+      "tag": "scguns:stan_bullet_tips"
+    }
+  ],
+  "results": [
+    {
+      "id": "scguns:buckshot",
+      "count": 8
+    }
+  ]
+}

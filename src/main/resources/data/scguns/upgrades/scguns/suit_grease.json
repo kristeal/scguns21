@@ -1,0 +1,8 @@
+{
+  "item": "scguns:suit_grease",
+  "type": "utility",
+  "effects": {
+    "speedModifier": 0.1
+  },
+  "display": {}
+}

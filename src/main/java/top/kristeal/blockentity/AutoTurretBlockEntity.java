@@ -1,0 +1,64 @@
+package top.kristeal.blockentity;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import top.kristeal.Reference;
+import top.kristeal.block.AutoTurretBlock;
+import top.kristeal.block.TurretTargetingBlock;
+import top.kristeal.client.screen.AutoTurretMenu;
+import top.kristeal.init.ModBlockEntities;
+
+import javax.annotation.Nullable;
+
+public class AutoTurretBlockEntity extends TurretBlockEntity {
+    private static final ResourceLocation TURRET_ID = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "auto_turret");
+
+    public AutoTurretBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.AUTO_TURRET.get(), pos, state, TURRET_ID);
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return Component.translatable("container.auto_turret");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInventory, @NotNull Player player) {
+        boolean hasTargetingModule = false;
+        if (this.level != null) {
+            for (Direction direction : Direction.values()) {
+                BlockState blockState = this.level.getBlockState(this.worldPosition.relative(direction));
+                if (blockState.getBlock() instanceof TurretTargetingBlock) {
+                    hasTargetingModule = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasTargetingModule) {
+            if (this.level != null && !this.level.isClientSide) {
+                player.sendSystemMessage(Component.translatable("message.scguns.turret_needs_targeting_module")
+                        .withStyle(ChatFormatting.YELLOW));
+            }
+            return null;
+        }
+
+        return new AutoTurretMenu(id, playerInventory, this);
+    }
+
+    @Override
+    protected boolean isPowered(BlockState state) {
+        return state.getValue(AutoTurretBlock.POWERED);
+    }
+}

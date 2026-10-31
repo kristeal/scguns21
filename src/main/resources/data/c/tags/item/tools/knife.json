@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "scguns:anthralite_knife",
+      "required": false
+    },
+    {
+      "id": "scguns:anthralite_bayonet",
+      "required": false
+    },
+    {
+      "id": "scguns:iron_bayonet",
+      "required": false
+    },
+    {
+      "id": "scguns:diamond_bayonet",
+      "required": false
+    },
+    {
+      "id": "scguns:netherite_bayonet",
+      "required": false
+    }
+  ]
+}

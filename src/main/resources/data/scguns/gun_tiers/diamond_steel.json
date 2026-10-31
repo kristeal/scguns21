@@ -1,0 +1,15 @@
+{
+  "level": 6,
+  "order": 6,
+  "tag": "scguns:diamond_steel_gun_tier",
+  "raid_level": 4,
+  "mob_tiers": [
+    "iron",
+    "copper",
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:diamond_steel_blueprint"
+  ]
+}

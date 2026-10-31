@@ -1,0 +1,81 @@
+package top.kristeal.client.screen;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+public class AmmoBoxMenu extends AbstractContainerMenu {
+    private final Container container;
+
+    public AmmoBoxMenu(int id, Inventory playerInventory, Container container) {
+        super(ModMenuTypes.AMMO_BOX.get(), id);
+        checkContainerSize(container, 27);
+        this.container = container;
+        container.startOpen(playerInventory.player); // as ChestMenu does: open/close sounds and the opener count
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(container, j + i * 9, 8 + j * 18, 18 + i * 18));
+            }
+        }
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(playerInventory, j + i * 9, 8 + j * 18, 84 + i * 18));
+            }
+        }
+        for (int i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+        }
+    }
+
+    public AmmoBoxMenu(int i, Inventory inventory, RegistryFriendlyByteBuf friendlyByteBuf) {
+        this(i, inventory, new SimpleContainer(27)); // Fix: cast the open menu to a Container (it never opened)
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        // Handle shift-clicking items between the container and player inventory
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+
+        if (slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+
+            if (index < this.container.getContainerSize()) {
+                if (!this.moveItemStackTo(itemstack1, this.container.getContainerSize(), this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return itemstack;
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        this.container.stopOpen(player);
+    }
+
+    public Container getContainer() {
+        return container;
+    }
+}

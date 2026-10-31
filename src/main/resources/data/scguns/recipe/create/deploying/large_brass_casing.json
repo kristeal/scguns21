@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:deploying",
+  "ingredients": [
+    [
+      {
+        "tag": "c:ingots/brass"
+      },
+      {
+        "item": "scguns:ancient_brass"
+      }
+    ],
+    {
+      "item": "scguns:large_casing_mold"
+    }
+  ],
+  "results": [
+    {
+      "id": "scguns:large_brass_casing",
+      "count": 6
+    }
+  ]
+}

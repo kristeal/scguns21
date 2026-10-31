@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.scguns.shell_catcher"
+  },
+  "exclusive_set": "#scguns:exclusive_set/ammo",
+  "max_cost": {
+    "base": 35,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 0
+  },
+  "primary_items": "#scguns:enchantable/shell_catcher",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#scguns:enchantable/shell_catcher",
+  "weight": 5
+}

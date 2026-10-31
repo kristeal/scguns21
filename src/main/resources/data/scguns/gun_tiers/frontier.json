@@ -1,0 +1,12 @@
+{
+  "level": 2,
+  "order": 1,
+  "tag": "scguns:frontier_gun_tier",
+  "raid_level": 1,
+  "mob_tiers": [
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:frontier_blueprint"
+  ]
+}

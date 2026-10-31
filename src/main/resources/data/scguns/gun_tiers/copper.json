@@ -1,0 +1,13 @@
+{
+  "level": 3,
+  "order": 2,
+  "tag": "scguns:copper_gun_tier",
+  "raid_level": 2,
+  "mob_tiers": [
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:copper_blueprint"
+  ]
+}

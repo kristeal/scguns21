@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:antique_blueprint",
+  "entry": "scguns:fencer_thumper",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "minecraft:stone",
+      "count": 18
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

@@ -1,0 +1,33 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:antique_blueprint",
+  "entry": "scguns:teslock_rifle",
+  "materials": [
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 14
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 7
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 6
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:redstone",
+      "count": 3
+    },
+    {
+      "item": "minecraft:smooth_stone",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

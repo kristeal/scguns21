@@ -1,0 +1,103 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_OCEANIC",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "OCEANIC"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_UNIQUE",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "UNIQUE"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_PIGLISH",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "PIGLISH"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_SCORCHED",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "SCORCHED"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_DEEP_DARK",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "DEEP_DARK"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_ENDISH",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "ENDISH"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_BIZARRE",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "BIZARRE"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_TREATED_BRASS",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "TREATED_BRASS"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_DIAMOND_STEEL",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "DIAMOND_STEEL"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_WRECKER",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "WRECKER"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "SCGUNS_RUSTY",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "top/kristeal/util/Constants",
+        "field": "RUSTY"
+      }
+    }
+  ]
+}

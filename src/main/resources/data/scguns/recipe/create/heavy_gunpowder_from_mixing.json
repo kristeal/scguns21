@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    [
+      {
+        "item": "scguns:sulfur_chunk"
+      },
+      {
+        "tag": "c:dusts/sulfur"
+      }
+    ],
+    {
+      "tag": "c:dusts/saltpeter"
+    },
+    {
+      "item": "minecraft:charcoal"
+    },
+    {
+      "tag": "c:dusts/phosphorus"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:gunpowder",
+      "count": 12
+    }
+  ]
+}

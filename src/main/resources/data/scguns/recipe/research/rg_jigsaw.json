@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:diamond_steel_blueprint",
+  "entry": "scguns:rg_jigsaw",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 21
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 19
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

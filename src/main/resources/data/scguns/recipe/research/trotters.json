@@ -1,0 +1,33 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:piglin_blueprint",
+  "entry": "scguns:trotters",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 44
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "count": 3
+    },
+    {
+      "item": "scguns:vehement_coal",
+      "count": 3
+    },
+    {
+      "item": "minecraft:crimson_planks",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

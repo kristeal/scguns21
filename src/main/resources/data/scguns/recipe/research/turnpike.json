@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:wrecker_blueprint",
+  "entry": "scguns:turnpike",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 41
+    },
+    {
+      "item": "scguns:treated_iron_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 3000
+}

@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:ocean_blueprint",
+  "entry": "scguns:sequoia",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 36
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

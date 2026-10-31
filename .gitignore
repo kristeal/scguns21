@@ -1,0 +1,41 @@
+# Gradle build and cache directories
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Minecraft run directory (worlds, logs, client configs, test mods)
+run/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Visual Studio Code
+.vscode/
+
+# Compiled Java files & archives
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs & Crash Reports
+*.log
+crash-reports/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+*.bak

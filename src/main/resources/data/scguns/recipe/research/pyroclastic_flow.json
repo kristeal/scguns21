@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:piglin_blueprint",
+  "entry": "scguns:pyroclastic_flow",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 27
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 7
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:crimson_planks",
+      "count": 3
+    },
+    {
+      "item": "scguns:vehement_coal",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

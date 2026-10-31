@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:grandle_og",
+  "materials": [
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 21
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 21
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 18
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

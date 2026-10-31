@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:spitfire",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 48
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 36
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

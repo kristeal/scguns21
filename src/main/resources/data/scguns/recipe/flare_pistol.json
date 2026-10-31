@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": { "item": "scguns:treated_brass_ingot" },
+    "X": { "item": "scguns:gun_barrel" },
+    "Q": { "item": "scguns:gun_grip" }
+  },
+  "pattern": [
+    "  X",
+    " # ",
+    "Q  "
+  ],
+  "result": { "id": "scguns:flare_pistol", "count": 1 }
+}

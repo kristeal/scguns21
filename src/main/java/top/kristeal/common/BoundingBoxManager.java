@@ -1,0 +1,183 @@
+package top.kristeal.common;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
+import net.minecraft.core.registries.BuiltInRegistries;
+import top.kristeal.Config;
+import top.kristeal.common.headshot.*;
+import top.kristeal.init.ModEntities;
+import top.kristeal.interfaces.IHeadshotBox;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import static top.kristeal.ScorchedGuns.LOGGER;
+
+/**
+ * Author: MrCrayfish
+ */
+public class BoundingBoxManager
+{
+    private static final Map<EntityType<?>, IHeadshotBox<?>> headshotBoxes = new HashMap<>();
+    private static final WeakHashMap<Player, LinkedList<AABB>> playerBoxes = new WeakHashMap<>();
+    private static final Map<EntityType<?>, IHeadshotBox<?>> dynamicHeadshotBoxes = new HashMap<>();
+
+    static
+    {
+        /* Player */
+        registerHeadshotBox(EntityType.PLAYER, (entity) -> {
+            AABB headBox = new AABB(-4 * 0.0625, 0, -4 * 0.0625, 4 * 0.0625, 8 * 0.0625, 4 * 0.0625);
+            double scale = 30.0 / 32.0;
+            if(entity.isSwimming())
+            {
+                headBox = headBox.move(0, 3 * 0.0625, 0);
+                Vec3 pos = Vec3.directionFromRotation(entity.getXRot(), entity.yBodyRot).normalize().scale(0.8);
+                headBox = headBox.move(pos);
+            }
+            else
+            {
+                headBox = headBox.move(0, entity.isShiftKeyDown() ? 20 * 0.0625 : 24 * 0.0625, 0);
+            }
+            return new AABB(headBox.minX * scale, headBox.minY * scale, headBox.minZ * scale, headBox.maxX * scale, headBox.maxY * scale, headBox.maxZ * scale);
+        });
+
+        registerHeadshotBox(EntityType.ZOMBIE, new ChildHeadshotBox<>(8.0, 24.0, 0.75, 0.5));
+        registerHeadshotBox(EntityType.ZOMBIFIED_PIGLIN, new ChildHeadshotBox<>(8.0, 24.0, 0.75, 0.5));
+        registerHeadshotBox(EntityType.HUSK, new ChildHeadshotBox<>(8.0, 24.0, 0.75, 0.5));
+        registerHeadshotBox(EntityType.SKELETON, new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(EntityType.WITHER_SKELETON, new BasicHeadshotBox<>(8.0, 26.0));
+        registerHeadshotBox(EntityType.STRAY, new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(EntityType.CREEPER, new BasicHeadshotBox<>(8.0, 18.0));
+        registerHeadshotBox(EntityType.SPIDER, new RotatedHeadshotBox<>(8.0, 5.0, 7.0, false, true));
+        registerHeadshotBox(EntityType.DROWNED, new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(EntityType.VILLAGER, new NoChildHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.ZOMBIE_VILLAGER, new NoChildHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.VINDICATOR, new NoChildHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.EVOKER, new BasicHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.PILLAGER, new BasicHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.ILLUSIONER, new BasicHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.WANDERING_TRADER, new BasicHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.WITCH, new BasicHeadshotBox<>(8.0, 9.0, 23.0));
+        registerHeadshotBox(EntityType.SHEEP, new RotatedHeadshotBox<>(7.5, 8.0, 15.0, 9.5, false, true));
+        registerHeadshotBox(EntityType.CHICKEN, new NoChildRotatedHeadshotBox<>(4.0, 6.0, 9.0, 5.0, false, true));
+        registerHeadshotBox(EntityType.COW, new NoChildRotatedHeadshotBox<>(7.5, 8.0, 16.0, 10.5, false, true));
+        registerHeadshotBox(EntityType.MOOSHROOM, new NoChildRotatedHeadshotBox<>(7.5, 8.0, 16.0, 10.5, false, true));
+        registerHeadshotBox(EntityType.PIG, new NoChildRotatedHeadshotBox<>(8.0, 8.0, 10, false, true));
+        registerHeadshotBox(EntityType.HORSE, new RotatedHeadshotBox<>(10.0, 26.0, 16.0, false, true));
+        registerHeadshotBox(EntityType.SKELETON_HORSE, new RotatedHeadshotBox<>(10.0, 26.0, 16.0, false, true));
+        registerHeadshotBox(EntityType.DONKEY, new RotatedHeadshotBox<>(7.5, 8.0, 20.0, 13.0, false, true));
+        registerHeadshotBox(EntityType.MULE, new RotatedHeadshotBox<>(7.5, 8.0, 21.0, 14.0, false, true));
+        registerHeadshotBox(EntityType.LLAMA, new RotatedHeadshotBox<>(8.0, 26.0, 10.0, false, true));
+        registerHeadshotBox(EntityType.TRADER_LLAMA, new RotatedHeadshotBox<>(8.0, 26.0, 10.0, false, true));
+        registerHeadshotBox(EntityType.POLAR_BEAR, new RotatedHeadshotBox<>(9.0, 12.0, 20.0, false, true));
+        registerHeadshotBox(EntityType.SNOW_GOLEM, new BasicHeadshotBox<>(10.0, 20.5));
+        registerHeadshotBox(EntityType.TURTLE, new RotatedHeadshotBox<>(6.0, 5.0, 1.0, 10.0, false, true));
+        registerHeadshotBox(EntityType.IRON_GOLEM, new RotatedHeadshotBox<>(8.0, 10.0, 33.0, 3.5, false, true));
+        registerHeadshotBox(EntityType.PHANTOM, new RotatedHeadshotBox<>(6.0, 3.0, 1.5, 6.5, true, true));
+        registerHeadshotBox(EntityType.HOGLIN, new RotatedHeadshotBox<>(14.0, 16.0, 7.0, 19.0, false, true));
+        registerHeadshotBox(EntityType.ZOGLIN, new RotatedHeadshotBox<>(14.0, 16.0, 7.0, 19.0, false, true));
+        registerHeadshotBox(EntityType.PIGLIN, new ChildHeadshotBox<>(8.0, 24.0, 0.75, 0.5));
+        registerHeadshotBox(ModEntities.HORNLIN.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.ZOMBIFIED_HORNLIN.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.THE_MERCHANT.get(), new BasicHeadshotBox<>(8.0, 29.0));
+        registerHeadshotBox(ModEntities.COG_MINION.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.COG_KNIGHT.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.TRAUMA_UNIT.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.BLUNDERER.get(), new BasicHeadshotBox<>(8.0, 24.0));
+        registerHeadshotBox(ModEntities.HIVE.get(), new BasicHeadshotBox<>(8.0, 18.0));
+        registerHeadshotBox(ModEntities.SULFURHEAD.get(), new BasicHeadshotBox<>(8.0, 18.0));
+        registerHeadshotBox(ModEntities.DISSIDENT.get(), new BasicHeadshotBox<>(8.0, 18.0));
+        registerHeadshotBox(ModEntities.SCAMP_TANK.get(), new BasicHeadshotBox<>(8.0, 30.0));
+
+
+    }
+
+    /**
+     * Registers a headshot box for the specified entity type.
+     *
+     * @param type        the entity type
+     * @param headshotBox a {@link IHeadshotBox} get
+     * @param <T>         a type that extends {@link LivingEntity}
+     */
+    public static <T extends LivingEntity> void registerHeadshotBox(EntityType<T> type, IHeadshotBox<T> headshotBox)
+    {
+        headshotBoxes.putIfAbsent(type, headshotBox);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static IHeadshotBox<LivingEntity> getHeadshotBoxes(EntityType<?> type) {
+        IHeadshotBox<?> box = headshotBoxes.get(type);
+        if (box != null) {
+            return (IHeadshotBox<LivingEntity>) box;
+        }
+        box = dynamicHeadshotBoxes.get(type);
+        if (box != null) {
+            return (IHeadshotBox<LivingEntity>) box;
+        }
+        if (type.getCategory() == MobCategory.MONSTER ||
+                type.getCategory() == MobCategory.CREATURE ||
+                type.getCategory() == MobCategory.AMBIENT) {
+            DynamicHeadshotBox<LivingEntity> dynamicBox = new DynamicHeadshotBox<>();
+            dynamicHeadshotBoxes.put(type, dynamicBox);
+            return dynamicBox;
+        }
+        return null;
+    }
+
+    public static void clearDynamicBoxCache() {
+        dynamicHeadshotBoxes.clear();
+    }
+    @SubscribeEvent(receiveCanceled = true)
+    public void onPlayerTick(PlayerTickEvent.Post event)
+    {
+        if(!Config.COMMON.gameplay.improvedHitboxes.get())
+            return;
+
+        if(!event.getEntity().level().isClientSide())
+        {
+            if(event.getEntity().isSpectator())
+            {
+                playerBoxes.remove(event.getEntity());
+                return;
+            }
+            LinkedList<AABB> boxes = playerBoxes.computeIfAbsent(event.getEntity(), player -> new LinkedList<>());
+            boxes.addFirst(event.getEntity().getBoundingBox());
+            if(boxes.size() > 20)
+            {
+                boxes.removeLast();
+            }
+        }
+    }
+
+    @SubscribeEvent(receiveCanceled = true)
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event)
+    {
+        playerBoxes.remove(event.getEntity());
+    }
+
+    public static AABB getBoundingBox(Player entity, int ping)
+    {
+        if(playerBoxes.containsKey(entity))
+        {
+            LinkedList<AABB> boxes = playerBoxes.get(entity);
+            int index = Mth.clamp(ping, 0, boxes.size() - 1);
+            return boxes.get(index);
+        }
+        return entity.getBoundingBox();
+    }
+}

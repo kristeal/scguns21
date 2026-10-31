@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:copper_blueprint",
+  "entry": "scguns:blooper",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 32
+    },
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 1800
+}

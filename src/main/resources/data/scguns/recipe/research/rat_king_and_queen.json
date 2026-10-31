@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:scorched_blueprint",
+  "entry": "scguns:rat_king_and_queen",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 31
+    },
+    {
+      "item": "scguns:scorched_ingot",
+      "count": 18
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 6000
+}

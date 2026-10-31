@@ -1,0 +1,21 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:frontier_blueprint",
+  "entry": "scguns:callwell_conversion",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 19
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 12
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

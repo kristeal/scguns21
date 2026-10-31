@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:antique_blueprint",
+  "entry": "scguns:longarm",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "minecraft:stone",
+      "count": 9
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

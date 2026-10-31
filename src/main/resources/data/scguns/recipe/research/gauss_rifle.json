@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:gauss_rifle",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 24
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 7
+    },
+    {
+      "item": "scguns:plasma_core",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

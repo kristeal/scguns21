@@ -1,0 +1,33 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:copper_blueprint",
+  "entry": "scguns:arc_worker",
+  "materials": [
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 32
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 21
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 18
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 6
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:redstone",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 1800
+}

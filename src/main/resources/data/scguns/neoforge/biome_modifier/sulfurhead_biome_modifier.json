@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#scguns:is_general",
+  "spawners": {
+    "type": "scguns:sulfurhead",
+    "weight": 20,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

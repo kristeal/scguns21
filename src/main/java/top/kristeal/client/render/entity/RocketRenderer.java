@@ -1,0 +1,56 @@
+package top.kristeal.client.render.entity;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
+import top.kristeal.client.SpecialModels;
+import top.kristeal.client.util.RenderUtil;
+import top.kristeal.entity.projectile.RocketEntity;
+
+public class RocketRenderer extends EntityRenderer<RocketEntity>
+{
+    public RocketRenderer(EntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(RocketEntity entity)
+    {
+        return null;
+    }
+
+    @Override
+    public void render(RocketEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light)
+    {
+        if(entity.getProjectile().isVisible() || entity.tickCount <= 2)
+        {
+            return;
+        }
+
+        poseStack.pushPose();
+
+        poseStack.mulPose(Axis.YP.rotationDegrees(180F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(entityYaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(entity.getXRot() - 90));
+
+        float spin = (entity.tickCount + partialTicks) * 12.0F;
+        poseStack.mulPose(Axis.YP.rotationDegrees(spin));
+
+        Minecraft.getInstance().getItemRenderer().renderStatic(entity.getItem(), ItemDisplayContext.NONE, 15728880, OverlayTexture.NO_OVERLAY, poseStack, renderTypeBuffer, entity.level(), 0);
+
+        poseStack.translate(0, -1, 0);
+        float pulseScale = 1.0F + Mth.sin((entity.tickCount + partialTicks) * 0.5F) * 0.15F;
+        poseStack.scale(pulseScale, pulseScale, pulseScale);
+        RenderUtil.renderModel(SpecialModels.FLAME.getModel(), entity.getItem(), poseStack, renderTypeBuffer, 15728880, OverlayTexture.NO_OVERLAY);
+
+        poseStack.popPose();
+    }
+}

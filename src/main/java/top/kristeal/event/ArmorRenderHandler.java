@@ -1,0 +1,90 @@
+package top.kristeal.event;
+
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import top.kristeal.Reference;
+import top.kristeal.item.animated.*;
+
+@EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT)
+public class ArmorRenderHandler {
+
+    @SubscribeEvent
+    public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
+        if (event.getRenderer().getModel() instanceof PlayerModel<?> playerModel) {
+            hideSecondLayerForCustomArmor(event.getEntity(), playerModel);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderLivingPost(RenderLivingEvent.Post<?, ?> event) {
+        if (event.getRenderer().getModel() instanceof PlayerModel<?> playerModel) {
+            restoreSecondLayer(playerModel);
+        }
+    }
+
+    private static void hideSecondLayerForCustomArmor(net.minecraft.world.entity.LivingEntity entity, PlayerModel<?> playerModel) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) { // Port note: 1.21 renamed Type.ARMOR to HUMANOID_ARMOR
+                ItemStack armorStack = entity.getItemBySlot(slot);
+                if (armorStack.getItem() instanceof AdrienArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof TreatedBrassArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof AnthraliteArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof AnthraliteGasMaskArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof NetheriteGasMaskArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof ExoSuitItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof DiamondSteelArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof RedcoatArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+                if (armorStack.getItem() instanceof ScrapArmorItem) {
+                    hideSecondLayerForSlot(playerModel, slot);
+                }
+            }
+        }
+    }
+
+    private static void hideSecondLayerForSlot(PlayerModel<?> playerModel, EquipmentSlot slot) {
+        switch (slot) {
+            case HEAD:
+                playerModel.hat.visible = false;
+                break;
+            case CHEST:
+                playerModel.jacket.visible = false;
+                playerModel.leftSleeve.visible = false;
+                playerModel.rightSleeve.visible = false;
+                break;
+            case LEGS:
+                playerModel.leftPants.visible = false;
+                playerModel.rightPants.visible = false;
+                break;
+        }
+    }
+
+    private static void restoreSecondLayer(PlayerModel<?> playerModel) {
+        playerModel.hat.visible = true;
+        playerModel.jacket.visible = true;
+        playerModel.leftSleeve.visible = true;
+        playerModel.rightSleeve.visible = true;
+        playerModel.leftPants.visible = true;
+        playerModel.rightPants.visible = true;
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "scguns:plasma"
+    }
+  ],
+  "processing_time": 20,
+  "results": [
+    {
+      "id": "scguns:plasma_nugget",
+      "count": 5
+    }
+  ]
+}

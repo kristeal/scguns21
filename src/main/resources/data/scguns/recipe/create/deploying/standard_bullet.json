@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "tag": "scguns:standard_bullet_material"
+    },
+    {
+      "item": "scguns:bullet_mold"
+    }
+  ],
+  "results": [
+    {
+      "id": "scguns:standard_bullet",
+      "count": 12
+    }
+  ]
+}

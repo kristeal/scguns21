@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "scguns:dissident",
+      "required": false
+    },
+    {
+      "id": "scguns:hive",
+      "required": false
+    },
+    {
+      "id": "scguns:zombified_hornlin",
+      "required": false
+    }
+  ]
+}

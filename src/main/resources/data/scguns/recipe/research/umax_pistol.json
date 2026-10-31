@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:copper_blueprint",
+  "entry": "scguns:umax_pistol",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 12
+    },
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 6
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 1800
+}

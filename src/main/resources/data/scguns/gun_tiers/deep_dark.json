@@ -1,0 +1,15 @@
+{
+  "level": 6,
+  "order": 9,
+  "tag": "scguns:deep_dark_gun_tier",
+  "raid_level": 4,
+  "mob_tiers": [
+    "iron",
+    "copper",
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:deep_dark_blueprint"
+  ]
+}

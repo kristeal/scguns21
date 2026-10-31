@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:scorched_blueprint",
+  "entry": "scguns:terra_incognita",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 78
+    },
+    {
+      "item": "scguns:scorched_ingot",
+      "count": 24
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 6000
+}

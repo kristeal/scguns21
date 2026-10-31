@@ -1,0 +1,43 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    [
+      {
+        "item": "scguns:sulfur_chunk"
+      },
+      {
+        "tag": "c:dusts/sulfur"
+      }
+    ],
+    {
+      "item": "minecraft:sculk"
+    },
+    [
+      {
+        "item": "scguns:raw_phosphor"
+      },
+      {
+        "tag": "c:dusts/phosphorus"
+      }
+    ],
+    {
+      "item": "minecraft:charcoal"
+    }
+  ],
+  "results": [
+    {
+      "id": "scguns:peal",
+      "count": 10
+    },
+    {
+      "id": "scguns:peal_dust",
+      "chance": 0.5
+    }
+  ]
+}

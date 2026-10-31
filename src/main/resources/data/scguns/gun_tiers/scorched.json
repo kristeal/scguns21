@@ -1,0 +1,17 @@
+{
+  "level": 7,
+  "order": 11,
+  "tag": "scguns:scorched_gun_tier",
+  "raid_level": 5,
+  "mob_tiers": [
+    "diamond_steel",
+    "treated_brass",
+    "iron",
+    "copper",
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:scorched_blueprint"
+  ]
+}

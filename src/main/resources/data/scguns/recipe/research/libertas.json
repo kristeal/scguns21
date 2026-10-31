@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:libertas",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 30
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 7
+    },
+    {
+      "item": "scguns:plasma_core",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

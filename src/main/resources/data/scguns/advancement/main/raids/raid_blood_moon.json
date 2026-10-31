@@ -1,0 +1,31 @@
+{
+  "parent": "scguns:main/raids/first_raid",
+  "display": {
+    "icon": {
+      "id": "minecraft:redstone_block"
+    },
+    "title": {
+      "translate": "scguns.advancement.raids.raid_blood_moon"
+    },
+    "description": {
+      "translate": "scguns.advancement.raids.raid_blood_moon.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "raid_won": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "blood_moon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "raid_won"
+    ]
+  ]
+}

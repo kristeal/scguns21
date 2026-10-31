@@ -1,0 +1,10 @@
+{
+  "level": 1,
+  "order": 0,
+  "tag": "scguns:antique_gun_tier",
+  "raid_level": 1,
+  "mob_tiers": [],
+  "blueprints": [
+    "scguns:antique_blueprint"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "scguns:main/niter_dust",
+  "criteria": {
+    "cryoniter": {
+      "conditions": {
+        "items": [
+          {
+            "items": "scguns:cryoniter"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "scguns.advancement.cryoniter.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "scguns:cryoniter"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "scguns.advancement.cryoniter"
+    }
+  },
+  "requirements": [
+    [
+      "cryoniter"
+    ]
+  ]
+}

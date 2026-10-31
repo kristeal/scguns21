@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:piglin_blueprint",
+  "entry": "scguns:mangalitsa",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 51
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "scguns:vehement_coal",
+      "count": 3
+    },
+    {
+      "item": "minecraft:crimson_planks",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "scguns:main/blackpowder/handcannon",
+  "criteria": {
+    "blunderbuss": {
+      "conditions": {
+        "items": [
+          {
+            "items": "scguns:blunderbuss"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "scguns.advancement.blunderbuss.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "scguns:blunderbuss"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "scguns.advancement.blunderbuss"
+    }
+  },
+  "requirements": [
+    [
+      "blunderbuss"
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:deep_dark_blueprint",
+  "entry": "scguns:echoes_2",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 51
+    },
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 18
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    },
+    {
+      "item": "minecraft:echo_shard",
+      "count": 3
+    },
+    {
+      "item": "minecraft:sculk_sensor",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 6000
+}

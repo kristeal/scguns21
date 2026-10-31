@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "scguns:vehement_coal_ore",
+    "scguns:vehement_coal_block",
+    {
+      "id": "scguns:sulfur_vent",
+      "required": false
+    },
+    {
+      "id": "scguns:mob_trap",
+      "required": false
+    },
+    "scguns:scorched_block"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "parent": "scguns:main/raids/first_raid",
+  "display": {
+    "icon": {
+      "id": "scguns:ocean_flare"
+    },
+    "title": {
+      "translate": "scguns.advancement.raids.raid_ocean"
+    },
+    "description": {
+      "translate": "scguns.advancement.raids.raid_ocean.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "raid_won": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "ocean"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "raid_won"
+    ]
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:copper_blueprint",
+  "entry": "scguns:rusty_gnat",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 21
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 14
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    }
+  ],
+  "steps": 10,
+  "time": 1800
+}

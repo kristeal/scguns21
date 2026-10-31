@@ -1,0 +1,33 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:diamond_steel_blueprint",
+  "entry": "scguns:shard_culler",
+  "materials": [
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 54
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 32
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:amethyst_shard",
+      "count": 3
+    },
+    {
+      "item": "scguns:energy_core",
+      "count": 3
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 1
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

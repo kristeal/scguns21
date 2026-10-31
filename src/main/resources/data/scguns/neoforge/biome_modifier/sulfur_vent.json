@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:nether_wastes"
+  ],
+  "features": "scguns:patch_sulfur_vent",
+  "step": "vegetal_decoration"
+}

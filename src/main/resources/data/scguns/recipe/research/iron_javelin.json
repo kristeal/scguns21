@@ -1,0 +1,21 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:iron_blueprint",
+  "entry": "scguns:iron_javelin",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 39
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 12
+    }
+  ],
+  "steps": 10,
+  "time": 2400
+}

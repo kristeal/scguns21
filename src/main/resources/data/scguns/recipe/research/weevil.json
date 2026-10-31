@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:end_blueprint",
+  "entry": "scguns:weevil",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 48
+    },
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 36
+    },
+    {
+      "item": "minecraft:shulker_shell",
+      "count": 9
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 6000
+}

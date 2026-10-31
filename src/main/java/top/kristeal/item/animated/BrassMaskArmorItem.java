@@ -1,0 +1,204 @@
+package top.kristeal.item.animated;
+
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.util.GeckoLibUtil;
+import top.kristeal.client.render.armor.BrassMaskArmorRenderer;
+
+import top.kristeal.Config;
+import top.kristeal.entity.monster.DissidentEntity;
+import top.kristeal.init.ModEntities;
+
+import java.util.function.Consumer;
+
+public class BrassMaskArmorItem extends ArmorItem implements GeoItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public BrassMaskArmorItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
+        super(pMaterial, pType, pProperties);
+    }
+
+    @Override
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private BrassMaskArmorRenderer renderer;
+
+            @Override
+            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(
+                    @Nullable T livingEntity, ItemStack itemStack,
+                    @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
+                if (this.renderer == null)
+                    this.renderer = new BrassMaskArmorRenderer();
+                return this.renderer;
+            }
+        });
+    }
+
+    // Ritual re-enabled (DissidentEntity / PraetorEntity, ModEntities, ModSounds and Config are ported)
+    @Override
+    public InteractionResult useOn(UseOnContext pContext) {
+        Player player = pContext.getPlayer();
+        Level level = pContext.getLevel();
+        BlockPos pos = pContext.getClickedPos();
+        if (player != null && player.isShiftKeyDown() && isValidHomUnculusStructure(level, pos)) {
+
+            if (!level.isClientSide()) {
+                if (!player.getAbilities().instabuild) {
+                    pContext.getItemInHand().shrink(1);
+                }
+
+                BlockPos bottomPos, topPos;
+                if (level.getBlockState(pos.above()).is(Blocks.CLAY)) {
+                    bottomPos = pos;
+                    topPos = pos.above();
+                } else {
+                    bottomPos = pos.below();
+                    topPos = pos;
+                }
+
+                level.setBlock(bottomPos, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlock(topPos, Blocks.AIR.defaultBlockState(), 3);
+
+                spawnCreationEffects((ServerLevel) level, bottomPos.above());
+                level.playSound(null, bottomPos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 0.8F, 0.8F + level.random.nextFloat() * 0.4F);
+
+                boolean disableVillagers = Config.COMMON.gameplay.disableVillagerSpawning.get();
+
+                if (disableVillagers) {
+                    double dissidentChance = Config.COMMON.gameplay.dissidentSpawnChance.get();
+
+                    if (level.random.nextDouble() < dissidentChance) {
+                        DissidentEntity dissident = createNeutralDissident(level, bottomPos, player);
+                        level.addFreshEntity(dissident);
+                        level.playSound(null, bottomPos, SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.HOSTILE, 1.0F, 0.8F);
+                    }
+                } else {
+                    boolean createDissident = level.random.nextBoolean();
+
+                    if (createDissident) {
+                        DissidentEntity dissident = createNeutralDissident(level, bottomPos, player);
+                        level.addFreshEntity(dissident);
+                        level.playSound(null, bottomPos, SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.HOSTILE, 1.0F, 0.8F);
+                    } else {
+                        Villager villager = new Villager(EntityType.VILLAGER, level);
+                        villager.moveTo(bottomPos.getX() + 0.5, bottomPos.getY(), bottomPos.getZ() + 0.5, 0.0F, 0.0F);
+
+                        var villagerTypes = BuiltInRegistries.VILLAGER_TYPE.stream().toList();
+                        VillagerType randomType = villagerTypes.get(level.random.nextInt(villagerTypes.size()));
+                        villager.setVillagerData(villager.getVillagerData().setType(randomType).setProfession(VillagerProfession.NONE));
+
+                        level.addFreshEntity(villager);
+                        level.playSound(null, bottomPos, SoundEvents.VILLAGER_CELEBRATE, SoundSource.NEUTRAL, 1.0F, 1.2F);
+                    }
+                }
+            }
+
+            return InteractionResult.SUCCESS;
+        }
+        return super.useOn(pContext);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+        if (pPlayer.isShiftKeyDown()) {
+            return InteractionResultHolder.pass(pPlayer.getItemInHand(pHand));
+        }
+
+        return super.use(pLevel, pPlayer, pHand);
+    }
+
+    private boolean isValidHomUnculusStructure(Level level, BlockPos pos) {
+        BlockState clickedBlock = level.getBlockState(pos);
+        if (!clickedBlock.is(Blocks.CLAY)) {
+            return false;
+        }
+        if (level.getBlockState(pos.above()).is(Blocks.CLAY)) {
+            return true;
+        }
+        return level.getBlockState(pos.below()).is(Blocks.CLAY);
+    }
+
+    private void spawnCreationEffects(ServerLevel level, BlockPos pos) {
+        for (int i = 0; i < 20; i++) {
+            double x = pos.getX() + 0.5 + (level.random.nextDouble() - 0.5) * 2.0;
+            double y = pos.getY() + level.random.nextDouble() * 2.0;
+            double z = pos.getZ() + 0.5 + (level.random.nextDouble() - 0.5) * 2.0;
+
+            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 1, 0.0, 0.0, 0.0, 0.1);
+        }
+        for (int i = 0; i < 15; i++) {
+            double x = pos.getX() + 0.5 + (level.random.nextDouble() - 0.5) * 1.5;
+            double y = pos.getY() + level.random.nextDouble() * 1.5;
+            double z = pos.getZ() + 0.5 + (level.random.nextDouble() - 0.5) * 1.5;
+
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, x, y, z, 1, 0.0, 0.1, 0.0, 0.05);
+        }
+    }
+
+    private DissidentEntity createNeutralDissident(Level level, BlockPos bottomPos, Player creator) {
+        DissidentEntity dissident = new DissidentEntity(ModEntities.DISSIDENT.get(), level);
+        dissident.moveTo(bottomPos.getX() + 0.5, bottomPos.getY(), bottomPos.getZ() + 0.5, 0.0F, 0.0F);
+
+        var maxHealthAttribute = dissident.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+        if (maxHealthAttribute != null) {
+            maxHealthAttribute.setBaseValue(maxHealthAttribute.getBaseValue() * 0.6);
+            dissident.setHealth((float) maxHealthAttribute.getValue());
+        }
+
+        if (creator != null) {
+            dissident.targetSelector.getAvailableGoals().removeIf(goal ->
+                    goal.getGoal() instanceof net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal);
+
+            dissident.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                    dissident, Player.class, 10, true, false,
+                    player -> player != creator && !((Player)player).isCreative() && !player.isSpectator()
+            ));
+        }
+
+        return dissident;
+    }
+
+    private PlayState predicate(AnimationState animationState) {
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.brass_mask.idle", Animation.LoopType.LOOP));
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController(this, "controller", 0, this::predicate));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+}

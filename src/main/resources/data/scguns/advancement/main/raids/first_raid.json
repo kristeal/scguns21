@@ -1,0 +1,28 @@
+{
+  "parent": "scguns:main/root",
+  "display": {
+    "icon": {
+      "id": "scguns:white_flag"
+    },
+    "title": {
+      "translate": "scguns.advancement.raids.first_raid"
+    },
+    "description": {
+      "translate": "scguns.advancement.raids.first_raid.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "raid_won": {
+      "trigger": "scguns:raid_won"
+    }
+  },
+  "requirements": [
+    [
+      "raid_won"
+    ]
+  ]
+}

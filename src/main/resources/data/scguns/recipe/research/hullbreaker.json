@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:ocean_blueprint",
+  "entry": "scguns:hullbreaker",
+  "materials": [
+    {
+      "item": "scguns:treated_iron_ingot",
+      "count": 69
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 17
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "scguns:anthralite_pickaxe",
+    {
+      "id": "scguns:anthralite_hammer",
+      "required": false
+    },
+    {
+      "id": "scguns:anthralite_paxel",
+      "required": false
+    }
+  ]
+}

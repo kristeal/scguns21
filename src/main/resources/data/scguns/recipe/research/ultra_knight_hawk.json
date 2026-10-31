@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:iron_blueprint",
+  "entry": "scguns:ultra_knight_hawk",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 58
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 47
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "scguns:treated_iron_ingot",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 2400
+}

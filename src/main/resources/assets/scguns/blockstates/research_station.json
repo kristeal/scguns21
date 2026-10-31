@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "scguns:block/research_station",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "scguns:block/research_station",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "scguns:block/research_station",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "scguns:block/research_station",
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "level": 5,
+  "order": 4,
+  "tag": "scguns:wrecker_gun_tier",
+  "raid_level": 3,
+  "mob_tiers": [
+    "copper",
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:wrecker_blueprint"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:piglin_blueprint",
+  "entry": "scguns:vulcanic_repeater",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 39
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:crimson_planks",
+      "count": 3
+    },
+    {
+      "item": "scguns:vehement_coal",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

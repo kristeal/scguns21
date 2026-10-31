@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:wrecker_blueprint",
+  "entry": "scguns:homemaker",
+  "materials": [
+    {
+      "item": "scguns:treated_iron_ingot",
+      "count": 21
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 18
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 18
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    }
+  ],
+  "steps": 10,
+  "time": 3000
+}

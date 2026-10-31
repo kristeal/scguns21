@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:osgood_50",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 33
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 10
+    },
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 6
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

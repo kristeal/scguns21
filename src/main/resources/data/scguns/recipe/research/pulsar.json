@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:iron_blueprint",
+  "entry": "scguns:pulsar",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 18
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 12
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:redstone",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 2400
+}

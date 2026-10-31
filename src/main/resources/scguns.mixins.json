@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "top.kristeal.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "client.ItemInHandLayerMixin",
+    "client.MinecraftMixin",
+    "client.PlayerModelMixin",
+    "client.MixinHumanoidModel",
+    "client.MixinIllagerModel",
+    "client.MixinAbstractZombieModel",
+    "client.MixinVindicatorRenderer",
+    "client.VehiclePoseMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

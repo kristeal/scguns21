@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.scguns.gun_rust"
+  },
+  "exclusive_set": "#scguns:exclusive_set/weapon",
+  "max_cost": {
+    "base": 75,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "primary_items": "#scguns:enchantable/gun",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#scguns:enchantable/gun",
+  "weight": 1
+}

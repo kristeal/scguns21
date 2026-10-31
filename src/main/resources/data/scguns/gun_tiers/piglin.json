@@ -1,0 +1,15 @@
+{
+  "level": 6,
+  "order": 8,
+  "tag": "scguns:piglin_gun_tier",
+  "raid_level": 4,
+  "mob_tiers": [
+    "iron",
+    "copper",
+    "frontier",
+    "antique"
+  ],
+  "blueprints": [
+    "scguns:piglin_blueprint"
+  ]
+}

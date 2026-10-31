@@ -1,0 +1,21 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:frontier_blueprint",
+  "entry": "scguns:red_raydar",
+  "materials": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 20
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 12
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 9
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

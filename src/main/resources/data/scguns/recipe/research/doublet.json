@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:antique_blueprint",
+  "entry": "scguns:doublet",
+  "materials": [
+    {
+      "item": "minecraft:stone",
+      "count": 24
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:flint",
+      "count": 3
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "count": 3
+    }
+  ],
+  "steps": 10,
+  "time": 1200
+}

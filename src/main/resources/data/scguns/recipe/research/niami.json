@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:treated_brass_blueprint",
+  "entry": "scguns:niami",
+  "materials": [
+    {
+      "item": "scguns:treated_brass_ingot",
+      "count": 24
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 24
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 12
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    }
+  ],
+  "steps": 10,
+  "time": 3600
+}

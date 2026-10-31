@@ -1,0 +1,124 @@
+{
+  "parent": "scguns:main/raids/first_raid",
+  "display": {
+    "icon": {
+      "id": "scguns:ribs_glory"
+    },
+    "title": {
+      "translate": "scguns.advancement.raids.all_raids"
+    },
+    "description": {
+      "translate": "scguns.advancement.raids.all_raids.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "antique": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "antique"
+      }
+    },
+    "frontier": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "frontier"
+      }
+    },
+    "copper": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "copper"
+      }
+    },
+    "iron": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "iron"
+      }
+    },
+    "wrecker": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "wrecker"
+      }
+    },
+    "ocean": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "ocean"
+      }
+    },
+    "diamond_steel": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "diamond_steel"
+      }
+    },
+    "treated_brass": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "treated_brass"
+      }
+    },
+    "piglin": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "piglin"
+      }
+    },
+    "sculk": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "sculk"
+      }
+    },
+    "blood_moon": {
+      "trigger": "scguns:raid_won",
+      "conditions": {
+        "raid": "blood_moon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "antique"
+    ],
+    [
+      "frontier"
+    ],
+    [
+      "copper"
+    ],
+    [
+      "iron"
+    ],
+    [
+      "wrecker"
+    ],
+    [
+      "ocean"
+    ],
+    [
+      "diamond_steel"
+    ],
+    [
+      "treated_brass"
+    ],
+    [
+      "piglin"
+    ],
+    [
+      "sculk"
+    ],
+    [
+      "blood_moon"
+    ]
+  ],
+  "rewards": {
+    "experience": 250
+  }
+}

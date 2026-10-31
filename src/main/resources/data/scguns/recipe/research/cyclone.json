@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:diamond_steel_blueprint",
+  "entry": "scguns:cyclone",
+  "materials": [
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 54
+    },
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 48
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

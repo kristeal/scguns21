@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.scguns.trigger_finger"
+  },
+  "exclusive_set": "#scguns:exclusive_set/reload",
+  "max_cost": {
+    "base": 55,
+    "per_level_above_first": 10
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 10
+  },
+  "primary_items": "#scguns:enchantable/trigger_finger",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#scguns:enchantable/trigger_finger",
+  "weight": 5
+}

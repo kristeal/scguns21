@@ -1,0 +1,25 @@
+{
+  "type": "scguns:research",
+  "blueprint": "scguns:diamond_steel_blueprint",
+  "entry": "scguns:inquisitor",
+  "materials": [
+    {
+      "item": "scguns:anthralite_ingot",
+      "count": 38
+    },
+    {
+      "item": "scguns:diamond_steel_ingot",
+      "count": 21
+    },
+    {
+      "tag": "minecraft:planks",
+      "count": 9
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 7
+    }
+  ],
+  "steps": 10,
+  "time": 4800
+}

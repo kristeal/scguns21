@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create_ironworks"
+    }
+  ],
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "scguns:anthralite_ingot"
+  },
+  "base": {
+    "item": "create_ironworks:iron_hammer"
+  },
+  "result": {
+    "id": "scguns:anthralite_hammer"
+  },
+  "template": {
+    "item": "minecraft:leather"
+  }
+}

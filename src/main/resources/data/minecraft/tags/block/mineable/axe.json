@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "scguns:supply_crate",
+    {
+      "id": "scguns:advanced_composter",
+      "required": false
+    },
+    {
+      "id": "scguns:powder_keg",
+      "required": false
+    },
+    {
+      "id": "scguns:nitro_keg",
+      "required": false
+    },
+    {
+      "id": "scguns:gun_shelf",
+      "required": false
+    }
+  ]
+}

@@ -12,7 +12,7 @@ Changes in this port:
   - Added ability for shotguns to break blocks (can be configured if more than 10 pellets strike one they break, similar to heavier guns)
   - Added an experimental progression system (can be turned on, it is off by default): that tries to imitate progression similar to earlier versions, by having to find blueprints, and  then research the guns from them using a new block.
   
-### Everything else behaves the same, if dont report it either here, or on my [DISCORD](https://discord.gg/yCRacrxczE) along with other bugs/incompatibilities you may find!
+### Everything else behaves the same, if it doesn't, report it either here, or on my [DISCORD](https://discord.gg/yCRacrxczE) along with other bugs/incompatibilities you may find!
 
 ## Requirements
 

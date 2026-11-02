@@ -1,14 +1,14 @@
 package top.kristeal;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import top.kristeal.client.SwayType;
 import top.kristeal.client.render.crosshair.DotRenderMode;
 import top.kristeal.client.screen.ButtonAlignment;
 
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Config
 {

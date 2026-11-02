@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/crossbow",
+    "textures": {
+        "layer0": "scguns:item/beacon_grenade_crossbow"
+    }
+}

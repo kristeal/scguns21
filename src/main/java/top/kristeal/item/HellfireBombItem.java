@@ -16,7 +16,7 @@ import top.kristeal.entity.throwable.ThrowableHellfireBombEntity;
 /**
  * Author: MrCrayfish
  */
-public class HellfireBombItem extends AmmoItem
+public class HellfireBombItem extends AmmoItem implements ICrossbowAmmo
 {
     protected int maxCookTime;
 
@@ -25,6 +25,23 @@ public class HellfireBombItem extends AmmoItem
         super(properties);
         this.maxCookTime = maxCookTime;
     }
+
+    @Override
+    public ThrowableGrenadeEntity createThrowable(Level level, LivingEntity shooter, ItemStack stack)
+    {
+        // Full fuse: a crossbow-launched molotov must not ignite on the shooter
+        ThrowableGrenadeEntity grenade = this.create(level, shooter, this.maxCookTime);
+        grenade.setPos(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
+        this.onThrown(level, grenade);
+        return grenade;
+    }
+
+    @Override
+    public int loadedItemIndex()
+    {
+        return 6;
+    }
+
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack)

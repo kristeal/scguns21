@@ -32,23 +32,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import dev.ryanhcode.sable.companion.SableCompanion;
+import dev.ryanhcode.sable.companion.SubLevelAccess;
 import top.kristeal.Config;
 import top.kristeal.block.*;
 import top.kristeal.common.Turret;
 import top.kristeal.common.TurretManager;
+import top.kristeal.compat.SableCompat;
 import top.kristeal.entity.projectile.turret.TurretProjectileEntity;
 import top.kristeal.init.ModTags;
 import top.kristeal.item.EnemyLogItem;
@@ -266,10 +266,12 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
 
         float yaw = this.getYaw();
         float pitch = this.getPitch();
-        Vec3 muzzlePos = getMuzzlePosition(yaw, pitch);
+
+        // This fixes muzzle position, so it displays where the turret is
+        Vec3 muzzlePos = SableCompat.toWorld(this.level, getMuzzlePosition(yaw, pitch));
 
         if (!this.level.isClientSide) {
-            PacketHandler.getPlayChannel().sendToTrackingChunk(() -> level.getChunkAt(worldPosition),
+            PacketHandler.getPlayChannel().sendToTrackingChunk(() -> level.getChunkAt(BlockPos.containing(muzzlePos)),
                     new S2CMessageMuzzleFlash(muzzlePos, yaw, pitch));
         }
 
@@ -279,10 +281,11 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
             fireSound = BuiltInRegistries.SOUND_EVENT.get(soundLoc);
         }
         if (fireSound != null) {
-            this.level.playSound(null, this.worldPosition, fireSound, SoundSource.BLOCKS, 0.7F, 0.7F);
+            this.level.playSound(null, muzzlePos.x, muzzlePos.y, muzzlePos.z, fireSound, SoundSource.BLOCKS, 0.7F, 0.7F);
         }
 
-        Vec3 targetPos = new Vec3(target.getX(), target.getY() + target.getEyeHeight() * 0.5, target.getZ());
+        Vec3 targetPos = SableCompat.toWorld(this.level,
+                new Vec3(target.getX(), target.getY() + target.getEyeHeight() * 0.5, target.getZ()));
         Vec3 direction = targetPos.subtract(muzzlePos).normalize();
 
         float inaccuracy = this.config.getCombat().getInaccuracy();
@@ -418,11 +421,11 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
 
         ItemStack casingStack = new ItemStack(Objects.requireNonNull(BuiltInRegistries.ITEM.get(casingType)));
         assert this.level != null;
-        ItemEntity casingEntity = new ItemEntity(this.level,
+        Vec3 casingPos = SableCompat.toWorld(this.level, new Vec3(
                 this.worldPosition.getX() + 0.5,
                 this.worldPosition.getY() + 1.0,
-                this.worldPosition.getZ() + 0.5,
-                casingStack);
+                this.worldPosition.getZ() + 0.5));
+        ItemEntity casingEntity = new ItemEntity(this.level, casingPos.x, casingPos.y, casingPos.z, casingStack);
 
         double ejectSpeed = 0.1;
         double ejectX = Direction.NORTH.getStepX() * ejectSpeed;
@@ -680,12 +683,17 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
         Vec3 turretPos = new Vec3(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1.0,
                 this.worldPosition.getZ() + 0.5);
         double verticalSearchRange = this.config.getTargeting().getVerticalRange();
-        AABB searchBox = new AABB(pos).inflate(targetingRadius, verticalSearchRange, targetingRadius);
+        // Search in world space so a turret on a Sable sub-level can see entities outside its plot;
+        // the plot itself is covered by getEntitiesOfClassIncludingSubLevels
+        Vec3 worldTurretPos = SableCompat.toWorld(level, turretPos);
+        AABB searchBox = new AABB(
+                worldTurretPos.x - targetingRadius - 0.5, worldTurretPos.y - verticalSearchRange - 0.5, worldTurretPos.z - targetingRadius - 0.5,
+                worldTurretPos.x + targetingRadius + 0.5, worldTurretPos.y + verticalSearchRange + 0.5, worldTurretPos.z + targetingRadius + 0.5);
 
         boolean finalIsPlayerTargetingModule = isPlayerTargetingModule;
         boolean finalIsHostileTargetingModule = isHostileTargetingModule;
 
-        List<LivingEntity> potentialTargets = level.getEntitiesOfClass(LivingEntity.class, searchBox,
+        List<LivingEntity> potentialTargets = SableCompat.getEntitiesOfClassIncludingSubLevels(level, LivingEntity.class, searchBox,
                 entity -> entity != null
                         && entity.isAlive()
                         && !isOwner(entity)
@@ -707,19 +715,22 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
             if (this.config.getTargeting().requiresLineOfSight()) {
                 this.target = potentialTargets.stream()
                         .filter(entity -> hasLineOfSight(level, turretPos, entity))
-                        .min(Comparator.comparingDouble(entity -> entity.distanceToSqr(turretPos)))
+                        .min(Comparator.comparingDouble(entity -> targetAimPos(entity).distanceToSqr(turretPos)))
                         .orElse(null);
             } else {
                 this.target = potentialTargets.stream()
-                        .min(Comparator.comparingDouble(entity -> entity.distanceToSqr(turretPos)))
+                        .min(Comparator.comparingDouble(entity -> targetAimPos(entity).distanceToSqr(turretPos)))
                         .orElse(null);
             }
 
             if (this.target != null) {
                 int predMult = this.config.getTargeting().getPredictionMultiplier();
-                double predictedX = this.target.getX() + this.target.getDeltaMovement().x * predMult;
-                double predictedY = this.target.getY() + (this.target.getBbHeight() / 2);
-                double predictedZ = this.target.getZ() + this.target.getDeltaMovement().z * predMult;
+                // Aim point in this turret's own frame, with the target's world velocity (sub-level motion included)
+                Vec3 aimPos = targetAimPos(this.target);
+                Vec3 aimVel = toAimFrameDir(SableCompanion.INSTANCE.getVelocity(level, this.target.position()));
+                double predictedX = aimPos.x + aimVel.x * predMult;
+                double predictedY = aimPos.y + (this.target.getBbHeight() / 2);
+                double predictedZ = aimPos.z + aimVel.z * predMult;
 
                 float smoothing = this.config.getTargeting().getPositionSmoothing();
                 double resultX = lerp(smoothedTargetX, predictedX, smoothing);
@@ -733,17 +744,28 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
     }
 
     protected boolean hasLineOfSight(Level level, Vec3 turretPos, LivingEntity target) {
-        Vec3 targetPos = target.getEyePosition();
-        Vec3 toTarget = targetPos.subtract(turretPos);
-        double distance = toTarget.length();
-        Vec3 rayVector = toTarget.normalize().scale(distance);
-        Vec3 adjustedTurretPos = turretPos.add(0, 0.5, 0);
+        // Trace in world space so the ray crosses Sable sub-levels as well as the open world
+        Vec3 fromWorld = SableCompat.toWorld(level, turretPos.add(0, 0.5, 0));
+        Vec3 toWorld = SableCompat.toWorld(level, target.getEyePosition());
+        return SableCompat.hasLineOfSight(level, fromWorld, toWorld);
+    }
 
-        ClipContext clipContext = new ClipContext(adjustedTurretPos, adjustedTurretPos.add(rayVector),
-                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, net.minecraft.world.phys.shapes.CollisionContext.empty()); // Port note: 1.21 ClipContext(..., Entity) no longer accepts null; 1.20.1 mapped null to CollisionContext.empty()
-        BlockHitResult hitResult = level.clip(clipContext);
 
-        return hitResult.getType() == HitResult.Type.MISS;
+     // Sable compat: this method checks where the turret is placed
+
+    @Nullable
+    protected SubLevelAccess getSubLevel() {
+        return this.level == null ? null : SableCompat.getContaining(this.level, this.worldPosition);
+    }
+
+
+    protected Vec3 targetAimPos(LivingEntity entity) {
+        assert this.level != null;
+        return SableCompat.toPlotFrame(getSubLevel(), SableCompat.toWorld(this.level, entity.position()));
+    }
+    protected Vec3 toAimFrameDir(Vec3 worldDir) {
+        SubLevelAccess subLevel = getSubLevel();
+        return subLevel == null ? worldDir : subLevel.logicalPose().transformNormalInverse(worldDir);
     }
 
     protected boolean isTargetValid() {
@@ -757,11 +779,11 @@ public abstract class TurretBlockEntity extends BlockEntity implements MenuProvi
             return false;
         }
 
-        double distanceSquared = this.target.distanceToSqr(
-                this.worldPosition.getX() + 0.5,
-                this.worldPosition.getY() + 0.5,
-                this.worldPosition.getZ() + 0.5
-        );
+        Vec3 aimPos = targetAimPos(this.target);
+        double dx = aimPos.x - (this.worldPosition.getX() + 0.5);
+        double dy = aimPos.y - (this.worldPosition.getY() + 0.5);
+        double dz = aimPos.z - (this.worldPosition.getZ() + 0.5);
+        double distanceSquared = dx * dx + dy * dy + dz * dz;
         return distanceSquared <= (targetingRadius * targetingRadius);
     }
 

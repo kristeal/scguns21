@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import top.kristeal.ScorchedGuns;
 
+import static top.kristeal.init.ModCompat.soulFiredLoaded;
+
 public class FakeSoulFireBlock extends BaseFireBlock {
     // 1.20.5+: blocks must expose a MapCodec; fire damage is fixed at the value used in ModBlocks
     public static final MapCodec<FakeSoulFireBlock> CODEC = simpleCodec(properties -> new FakeSoulFireBlock(properties, 2.0F));
@@ -84,7 +86,7 @@ public class FakeSoulFireBlock extends BaseFireBlock {
             }
 
             pEntity.hurt(pLevel.damageSources().inFire(), 2.0F);
-            if (ScorchedGuns.soulFiredLoaded) { // Soul Fire'd compat; its fire API is in Prometheus since 6.x
+            if (soulFiredLoaded()) { // Soul Fire'd compat; its fire API is in Prometheus since 6.x
                 try {
                     it.crystalnest.prometheus.api.FireManager.setOnFire(pEntity, pEntity.getRemainingFireTicks() / 20,
                             it.crystalnest.prometheus.api.FireManager.SOUL_FIRE_TYPE);

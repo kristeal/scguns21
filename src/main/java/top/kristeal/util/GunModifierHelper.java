@@ -10,9 +10,6 @@ import top.kristeal.item.GunItem;
 import top.kristeal.item.attachment.IAttachment;
 import top.kristeal.research.ResearchHelper;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Author: MrCrayfish
  */

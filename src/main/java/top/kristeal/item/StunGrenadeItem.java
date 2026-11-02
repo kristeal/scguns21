@@ -25,6 +25,12 @@ public class StunGrenadeItem extends GrenadeItem
     }
 
     @Override
+    public int loadedItemIndex()
+    {
+        return 3;
+    }
+
+    @Override
     public boolean canCook()
     {
         return false;

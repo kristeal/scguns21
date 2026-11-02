@@ -18,4 +18,6 @@ public class ModCompat {
     public static boolean isCreateIronworksLoaded() {
         return ModList.get().isLoaded("create_ironworks");
     }
+    public static boolean playerReviveLoaded(){ return ModList.get().isLoaded("playerrevive");}
+    public static boolean soulFiredLoaded(){ return ModList.get().isLoaded("soul_fire_d");}
 }

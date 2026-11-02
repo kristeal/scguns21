@@ -1,21 +1,10 @@
 package top.kristeal;
 
-import top.kristeal.world.VillageStructures;
-
 import net.minecraft.world.entity.Entity;
-
-import top.kristeal.entity.throwable.GrenadeEntity;
-
-import top.kristeal.init.ModFluids;
-import top.kristeal.util.ModCauldronInteraction;
-
-import top.kristeal.entity.projectile.*;
-import top.kristeal.attributes.SCAttributes;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -23,22 +12,26 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.kristeal.attributes.SCAttributes;
 import top.kristeal.client.screen.ModMenuTypes;
 import top.kristeal.common.BoundingBoxManager;
 import top.kristeal.common.ProjectileManager;
 import top.kristeal.common.exosuit.ExoSuitUpgradeManager;
-import top.kristeal.init.ModArmorMaterials;
+import top.kristeal.entity.projectile.*;
+import top.kristeal.entity.throwable.GrenadeEntity;
 import top.kristeal.init.*;
 import top.kristeal.network.PacketHandler;
+import top.kristeal.util.ModCauldronInteraction;
+import top.kristeal.world.VillageStructures;
 
 import static top.kristeal.Reference.MOD_ID;
+import static top.kristeal.init.ModCompat.soulFiredLoaded;
 
 @Mod(MOD_ID)
 public class ScorchedGuns {
     public static final String MODID = "scguns";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static boolean playerReviveLoaded;
-    public static boolean soulFiredLoaded;
+    //If you are looking for the compat bools they were moved to /init/ModCompat.java
 
     //Some compatibility mods were dropped as i dont have time to port them all, or didnt have a 1.21.1 port.
 
@@ -77,8 +70,7 @@ public class ScorchedGuns {
         modEventBus.addListener(this::onCommonSetup); // Projectile factories, improved hitboxes
         // Village gunsmith houses, and the two compat flags the port uses
         NeoForge.EVENT_BUS.addListener(VillageStructures::addNewVillageBuilding);
-        playerReviveLoaded = ModList.get().isLoaded("playerrevive");
-        soulFiredLoaded = ModList.get().isLoaded("soul_fire_d");
+
         ModCreativeModeTabs.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModFeatures.register(modEventBus);
@@ -89,7 +81,7 @@ public class ScorchedGuns {
     }
 
     public static void setSoulFireOnEntity(Entity entity, int seconds) {
-        if (soulFiredLoaded) {
+        if (soulFiredLoaded()) {
             try {
                 it.crystalnest.prometheus.api.FireManager.setOnFire(entity, seconds,
                         it.crystalnest.prometheus.api.FireManager.SOUL_FIRE_TYPE);

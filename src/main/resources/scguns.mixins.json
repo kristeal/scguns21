@@ -3,6 +3,9 @@
   "package": "top.kristeal.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
+  "mixins": [
+    "CrossbowItemMixin"
+  ],
   "client": [
     "client.ItemInHandLayerMixin",
     "client.MinecraftMixin",

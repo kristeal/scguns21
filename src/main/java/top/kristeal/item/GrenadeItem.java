@@ -16,7 +16,7 @@ import top.kristeal.init.ModSounds;
 /**
  * Author: MrCrayfish
  */
-public class GrenadeItem extends AmmoItem
+public class GrenadeItem extends AmmoItem implements ICrossbowAmmo
 {
     protected int maxCookTime;
 
@@ -24,6 +24,22 @@ public class GrenadeItem extends AmmoItem
     {
         super(properties);
         this.maxCookTime = maxCookTime;
+    }
+
+    @Override
+    public ThrowableGrenadeEntity createThrowable(Level level, LivingEntity shooter, ItemStack stack)
+    {
+        // Full fuse: a crossbow-launched grenade must not detonate on the shooter
+        ThrowableGrenadeEntity grenade = this.create(level, shooter, this.maxCookTime);
+        grenade.setPos(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
+        this.onThrown(level, grenade);
+        return grenade;
+    }
+
+    @Override
+    public int loadedItemIndex()
+    {
+        return 1;
     }
 
     @Override

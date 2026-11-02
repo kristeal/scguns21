@@ -6,6 +6,8 @@ import top.kristeal.ScorchedGuns;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static top.kristeal.init.ModCompat.playerReviveLoaded;
+
 /**
  * Author: MrCrayfish
  * Reached by reflection, as in the reference, so PlayerRevive stays optional.
@@ -20,7 +22,7 @@ public class PlayerReviveHelper
 
     public static boolean isBleeding(Player player)
     {
-        if(!ScorchedGuns.playerReviveLoaded || disable)
+        if(!playerReviveLoaded() || disable)
             return false;
         try
         {

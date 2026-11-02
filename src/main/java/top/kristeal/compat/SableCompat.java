@@ -6,12 +6,20 @@ import dev.ryanhcode.sable.companion.math.BoundingBox3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 /**
  * Sable sub-levels (physics-driven block structures) through Sable Companion. Without Sable installed, Companion's
@@ -51,17 +59,75 @@ public final class SableCompat {
     }
 
     /**
-     * Moves a position inside a sub-level plot to where it appears in the world. Other positions are returned as they are.
+     * Helper methods for turrets
      */
     public static Vec3 toWorld(Level level, Vec3 pos) {
         // Cast selects the Position overload; the Vec3 one is deprecated
         return SableCompanion.INSTANCE.projectOutOfSubLevel(level, (Position) pos);
     }
 
-    /**
-     * Whether a block position lies inside a sub-level plot.
-     */
     public static boolean isInSubLevel(Level level, BlockPos pos) {
         return SableCompanion.INSTANCE.getContaining(level, pos) != null;
+    }
+
+    @Nullable
+    public static SubLevelAccess getContaining(Level level, BlockPos pos) {
+        return SableCompanion.INSTANCE.getContaining(level, pos);
+    }
+
+    public static Vec3 toPlotFrame(@Nullable SubLevelAccess subLevel, Vec3 worldPos) {
+        return subLevel == null ? worldPos : subLevel.logicalPose().transformPositionInverse(worldPos);
+    }
+
+    public static boolean hasLineOfSight(Level level, Vec3 fromWorld, Vec3 toWorld) {
+        BlockHitResult hit = clipIncludingSubLevels(level, fromWorld, toWorld, (from, to) ->
+                level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty())));
+        return hit.getType() == HitResult.Type.MISS;
+    }
+
+    /**
+     * Entities of the given class inside a world-space box, plus those inside any sub-level plot the box crosses
+     * (queried in that plot's own coordinates, since entities tracking a sub-level live in its plot).
+     */
+    public static <T extends Entity> List<T> getEntitiesOfClassIncludingSubLevels(Level level, Class<T> clazz, AABB worldBox, Predicate<? super T> predicate) {
+        List<T> result = new ArrayList<>(level.getEntitiesOfClass(clazz, worldBox, predicate));
+        for (SubLevelAccess subLevel : SableCompanion.INSTANCE.getAllIntersecting(level, new BoundingBox3d(worldBox))) {
+            AABB plotBox = toPlotBox(subLevel, worldBox);
+            for (T entity : level.getEntitiesOfClass(clazz, plotBox, predicate)) {
+                boolean duplicate = false;
+                for (T existing : result) {
+                    if (existing.getId() == entity.getId()) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (!duplicate) {
+                    result.add(entity);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Maps a world-space box into a sub-level's plot frame by transforming its corners.
+     */
+    private static AABB toPlotBox(SubLevelAccess subLevel, AABB worldBox) {
+        Pose3dc pose = subLevel.logicalPose();
+        double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, minZ = Double.MAX_VALUE;
+        double maxX = -Double.MAX_VALUE, maxY = -Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
+        for (int i = 0; i < 8; i++) {
+            Vec3 corner = pose.transformPositionInverse(new Vec3(
+                    (i & 1) == 0 ? worldBox.minX : worldBox.maxX,
+                    (i & 2) == 0 ? worldBox.minY : worldBox.maxY,
+                    (i & 4) == 0 ? worldBox.minZ : worldBox.maxZ));
+            minX = Math.min(minX, corner.x);
+            minY = Math.min(minY, corner.y);
+            minZ = Math.min(minZ, corner.z);
+            maxX = Math.max(maxX, corner.x);
+            maxY = Math.max(maxY, corner.y);
+            maxZ = Math.max(maxZ, corner.z);
+        }
+        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 }

@@ -20,8 +20,13 @@ import top.kristeal.client.handler.BulletTrailRenderingHandler;
 import top.kristeal.client.handler.AimingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -35,6 +40,7 @@ import top.kristeal.client.render.gun.ModelOverrides;
 import top.kristeal.client.render.gun.model.*;
 import top.kristeal.client.util.PropertyHelper;
 import top.kristeal.item.GunItem;
+import top.kristeal.item.ICrossbowAmmo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -450,6 +456,15 @@ public class ClientHandler {
         CuriosRendererRegistry.register(ModItems.AIR_CANISTER.get(), AirCanisterRenderer::new);
         CuriosRendererRegistry.register(ModItems.REINFORCED_AIR_CANISTER.get(), AirCanisterRenderer::new);
         CuriosRendererRegistry.register(ModItems.CREATIVE_AIR_CANISTER.get(), AirCanisterRenderer::new);
+
+        // New crossbow mechanic using crossbow mixin to load grenades
+        event.enqueueWork(() -> ItemProperties.register(Items.CROSSBOW,
+                ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "grenade"),
+                (stack, level, entity, seed) -> {
+                    ChargedProjectiles charged = stack.get(DataComponents.CHARGED_PROJECTILES);
+                    if (charged == null || charged.isEmpty()) return 0.0F;
+                    return charged.getItems().get(0).getItem() instanceof ICrossbowAmmo ammo ? ammo.loadedItemIndex() : 0.0F; //Here indexes are used to determine wich grenade is wich
+                }));
     }
 
     @SubscribeEvent

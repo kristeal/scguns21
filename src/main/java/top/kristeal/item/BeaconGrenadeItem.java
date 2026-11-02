@@ -12,12 +12,25 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import top.kristeal.entity.throwable.ThrowableBeaconGrenadeEntity;
 
-public class BeaconGrenadeItem extends AmmoItem {
+public class BeaconGrenadeItem extends AmmoItem implements ICrossbowAmmo {
     protected int maxCookTime;
 
     public BeaconGrenadeItem(Properties properties, int maxCookTime) {
         super(properties);
         this.maxCookTime = maxCookTime;
+    }
+
+    @Override
+    public ThrowableBeaconGrenadeEntity createThrowable(Level level, LivingEntity shooter, ItemStack stack) {
+        ThrowableBeaconGrenadeEntity grenade = this.create(level, shooter, this.maxCookTime);
+        grenade.setPos(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
+        this.onThrown(level, grenade);
+        return grenade;
+    }
+
+    @Override
+    public int loadedItemIndex() {
+        return 4;
     }
 
     @Override

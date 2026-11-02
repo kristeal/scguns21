@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.EventHooks;
 import top.kristeal.Config;
+import top.kristeal.block.FakeSoulFireBlock;
 import top.kristeal.entity.projectile.ProjectileEntity;
 import top.kristeal.init.ModBlocks;
 import top.kristeal.interfaces.IExplosionDamageable;
@@ -171,6 +172,12 @@ public class GrenadeExplosionHelper
                         BlockPos pos = centerPos.offset(x, y, z);
                         BlockState stateAtPos = world.getBlockState(pos);
                         BlockState stateBelow = world.getBlockState(pos.below());
+
+                        if (stateAtPos.getBlock() instanceof FakeSoulFireBlock) {
+                            // HELFIREEEEEEEEEEEE NOW STAAAAAAAAAAAAAAAAAACKSSS
+                            world.scheduleTick(pos, stateAtPos.getBlock(), 50 + world.random.nextInt(21));
+                            break;
+                        }
 
                         if (stateAtPos.isAir() &&
                                 (stateBelow.isFaceSturdy(world, pos.below(), net.minecraft.core.Direction.UP) ||

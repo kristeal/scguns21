@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.phys.BlockHitResult;
@@ -17,6 +18,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import top.kristeal.compat.SableCompat;
 import top.kristeal.init.ModEntities;
 import top.kristeal.init.ModSounds;
 import top.kristeal.network.PacketHandler;
@@ -145,7 +147,19 @@ public class TurretProjectileEntity extends AbstractArrow {
 
     @Override
     public void tick() {
+        Vec3 start = this.position();
+        Vec3 delta = this.getDeltaMovement();
         super.tick();
+        // Added as part of Turret-Sable compat patch
+        // The vanilla arrow clip only traces the open world; Sable sub-level blocks live in their own plots,
+        // so trace the same segment again including sub-levels and handle any physics-object hit here
+        if (!this.level().isClientSide && !this.isRemoved() && !this.inGround) {
+            BlockHitResult hit = SableCompat.clipIncludingSubLevels(this.level(), start, start.add(delta),
+                    (from, to) -> this.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
+            if (hit.getType() == HitResult.Type.BLOCK && SableCompat.isInSubLevel(this.level(), hit.getBlockPos())) {
+                this.onHitBlock(hit);
+            }
+        }
 
         if (!this.level().isClientSide && !this.trailSpawned && this.tickCount == 1) {
             this.spawnBulletTrail();
@@ -333,12 +347,9 @@ public class TurretProjectileEntity extends AbstractArrow {
             closestEntity.invulnerableTime = Math.min(closestEntity.invulnerableTime, 3);
             traceEnd = closestHitPos;
         } else {
-            net.minecraft.world.level.ClipContext clipContext = new net.minecraft.world.level.ClipContext(
-                    start, end,
-                    net.minecraft.world.level.ClipContext.Block.COLLIDER,
-                    net.minecraft.world.level.ClipContext.Fluid.NONE,
-                    this);
-            BlockHitResult blockHit = this.level().clip(clipContext);
+            //Sable compat
+            BlockHitResult blockHit = SableCompat.clipIncludingSubLevels(this.level(), start, end,
+                    (from, to) -> this.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
             if (blockHit.getType() != net.minecraft.world.phys.HitResult.Type.MISS) {
                 traceEnd = blockHit.getLocation();
             }

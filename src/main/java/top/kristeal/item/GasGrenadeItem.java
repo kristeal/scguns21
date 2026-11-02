@@ -16,7 +16,7 @@ import top.kristeal.entity.throwable.ThrowableGrenadeEntity;
 /**
  * Author: MrCrayfish
  */
-public class GasGrenadeItem extends AmmoItem
+public class GasGrenadeItem extends AmmoItem implements ICrossbowAmmo
 {
     protected int maxCookTime;
 
@@ -24,6 +24,21 @@ public class GasGrenadeItem extends AmmoItem
     {
         super(properties);
         this.maxCookTime = maxCookTime;
+    }
+
+    @Override
+    public ThrowableGrenadeEntity createThrowable(Level level, LivingEntity shooter, ItemStack stack)
+    {
+        ThrowableGrenadeEntity grenade = this.create(level, shooter, 0, 10.0F);
+        grenade.setPos(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
+        this.onThrown(level, grenade);
+        return grenade;
+    }
+
+    @Override
+    public int loadedItemIndex()
+    {
+        return 2;
     }
 
     @Override

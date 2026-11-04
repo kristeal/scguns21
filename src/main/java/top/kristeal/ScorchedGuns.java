@@ -70,6 +70,7 @@ public class ScorchedGuns {
         ModCreativeModeTabs.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModFeatures.register(modEventBus);
+        ModStructures.register(modEventBus); // Cog Chambers structure type
         ModVillagers.register(modEventBus);
         ModFluids.FLUID_TYPES.register(modEventBus); // Vicious acid
         ModFluids.FLUIDS.register(modEventBus);

@@ -46,6 +46,11 @@ public class ModBlocks {
     public static final DeferredBlock<Block> GUN_SHELF = register("gun_shelf",
             () -> new GunShelfBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.OAK_PLANKS)
                     .strength(0.5F)));
+    public static final DeferredBlock<Block> MOB_TRAP = register("mob_trap",
+            () -> new MobTrapBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.IRON_BLOCK)
+                    .requiresCorrectToolForDrops()
+                    .strength(12.0F)
+                    .noOcclusion()));
     public static final DeferredBlock<Block> AMMO_BOX = register("ammo_box",
             () -> new AmmoBoxBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()

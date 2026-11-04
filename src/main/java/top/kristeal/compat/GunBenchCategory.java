@@ -1,8 +1,8 @@
 package top.kristeal.compat;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import net.minecraft.ChatFormatting;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -19,8 +19,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import top.kristeal.Reference;
 import top.kristeal.client.screen.GunBenchRecipe;
 import top.kristeal.init.ModBlocks;
-
-import java.awt.*;
 
 public class GunBenchCategory implements IRecipeCategory<GunBenchRecipe> {
     public static final ResourceLocation UID = Reference.id("gun_bench");

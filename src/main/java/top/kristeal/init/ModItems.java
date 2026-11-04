@@ -2042,7 +2042,8 @@ public class ModItems {
     public static final DeferredItem<Item> REPAIR_KIT = REGISTER.register("repair_kit", () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> SCAMP_PACKAGE = REGISTER.register("scamp_package", () -> new ScampPackageItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> VIVENTRUM_PACKAGE = REGISTER.register("viventrum_package", () -> new ViventrumPackageItem(new Item.Properties().stacksTo(1)));
-    public static final DeferredItem<Item> THE_PACT = REGISTER.register("the_pact", () -> new ThePactItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final DeferredItem<Item> COG_LOCATOR = REGISTER.register("cog_locator", () -> new CogLocatorItem(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<Item> THE_PACT =REGISTER.register("the_pact", () -> new ThePactItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 //
     // Vicious acid
     public static final DeferredItem<Item> VICIOUS_ACID_BUCKET = REGISTER.register("vicious_acid_bucket",

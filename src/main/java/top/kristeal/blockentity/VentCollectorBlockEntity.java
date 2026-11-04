@@ -358,7 +358,16 @@ public class VentCollectorBlockEntity extends BlockEntity implements MenuProvide
         super.loadAdditional(tag, registries);
         filterCharge = tag.getInt("FilterCharge");
         pushCooldown = tag.getInt("PushCooldown");
-        itemHandler.deserializeNBT(registries, tag.getCompound("Inventory"));
+        CompoundTag inventory = tag.getCompound("Inventory");
+        // Structure templates written before 1.20.5 (the Cog Chambers) store stack sizes as a byte "Count"; 1.21 reads "count"
+        for (net.minecraft.nbt.Tag entry : inventory.getList("Items", net.minecraft.nbt.Tag.TAG_COMPOUND)) {
+            CompoundTag stack = (CompoundTag) entry;
+            if (stack.contains("Count", net.minecraft.nbt.Tag.TAG_ANY_NUMERIC) && !stack.contains("count")) {
+                stack.putInt("count", stack.getInt("Count"));
+                stack.remove("Count");
+            }
+        }
+        itemHandler.deserializeNBT(registries, inventory);
     }
 
     public void drops() {

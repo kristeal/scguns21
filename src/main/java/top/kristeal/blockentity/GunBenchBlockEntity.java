@@ -47,7 +47,9 @@ public class GunBenchBlockEntity extends BlockEntity implements MenuProvider {
         super.loadAdditional(tag, registries);
         for (int i = 0; i < this.inventory.getContainerSize(); i++) {
             CompoundTag itemTag = tag.getCompound("Item" + i);
-            if (!itemTag.isEmpty()) {
+            // Structure templates written before 1.20.5 (the gunsmith houses, the Osgood Lab) store empty slots as
+            // {Count:0, id:"minecraft:air"}, which 1.21 would log as an invalid item
+            if (!itemTag.isEmpty() && !"minecraft:air".equals(itemTag.getString("id"))) {
                 this.inventory.setItem(i, ItemStack.parseOptional(registries, itemTag));
             }
         }

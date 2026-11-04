@@ -230,6 +230,7 @@ public class Config
         public final ExoSuitCores exoSuitCores;
         public final Raids raids;
         public final Banzai banzai;
+        public final Structures structures;
 
 
         public Common(ModConfigSpec.Builder builder)
@@ -248,6 +249,21 @@ public class Config
                 this.exoSuitCores = new ExoSuitCores(builder);
                 this.raids = new Raids(builder);
                 this.banzai = new Banzai(builder);
+                this.structures = new Structures(builder);
+            }
+            builder.pop();
+        }
+    }
+
+    public static class Structures {
+        public final ModConfigSpec.BooleanValue cogChambersEnabled;
+
+        public Structures(ModConfigSpec.Builder builder) {
+            builder.comment("World generation").push("structures");
+            {
+                this.cogChambersEnabled = builder
+                        .comment("If disabled, no new Cog Chambers generate. Chambers that already exist in a world are not removed.")
+                        .define("cogChambersEnabled", true);
             }
             builder.pop();
         }

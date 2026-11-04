@@ -34,6 +34,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("gun_bench", () ->
                     BlockEntityType.Builder.of(GunBenchBlockEntity::new,
                             ModBlocks.GUN_BENCH.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobTrapBlockEntity>> MOB_TRAP =
+            BLOCK_ENTITIES.register("mob_trap", () ->
+                    BlockEntityType.Builder.of(MobTrapBlockEntity::new,
+                            ModBlocks.MOB_TRAP.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CryoniterBlockEntity>> CRYONITER =
             BLOCK_ENTITIES.register("cryoniter", () ->
                     BlockEntityType.Builder.of(CryoniterBlockEntity::new,

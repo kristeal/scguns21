@@ -4,7 +4,7 @@ An unofficial port, Scorched Guns **21** brings [Scorched Guns 2](https://github
 
 
 Changes in this port:
-  - The cog chambers were not ported, because of trial chambers, in the future I'll add a special room for the boss fight and expand the trial chambers with Scorched Guns content.
+  - The Cog Chambers and the Cog Locator can now be turned off via config.
   - Bayonet behaviour was slightly changed, might feel better to use now.
   - Framework is no longer a dependency
   - Some smaller bugs from the original mod was fixed.

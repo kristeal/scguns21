@@ -1,34 +1,28 @@
 package top.kristeal.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.Holder;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import top.kristeal.Config;
 import top.kristeal.client.KeyBinds;
-import top.kristeal.common.*;
+import top.kristeal.common.Gun;
+import top.kristeal.common.GunStackData;
+import top.kristeal.common.NetworkGunManager;
+import top.kristeal.common.ReloadType;
 import top.kristeal.init.ModEnchantments;
 import top.kristeal.init.ModItems;
 import top.kristeal.init.ModTags;
@@ -36,9 +30,10 @@ import top.kristeal.item.attachment.IAttachment;
 import top.kristeal.util.GunEnchantmentHelper;
 import top.kristeal.util.GunModifierHelper;
 
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.WeakHashMap;
 
 public class GunItem extends Item implements IColored, IMeta {
     private final WeakHashMap<CustomData, Gun> modifiedGunCache = new WeakHashMap<>(); // Port note: keyed by the GUN_OVERRIDE component

@@ -487,6 +487,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.ENEMY_LOG.get());
                         pOutput.accept(ModItems.SCAMP_PACKAGE.get());
                         pOutput.accept(ModItems.VIVENTRUM_PACKAGE.get());
+                        pOutput.accept(ModItems.COG_LOCATOR.get());
                         pOutput.accept(ModItems.THE_PACT.get());
 
                         pOutput.accept(ModItems.VICIOUS_ACID_BUCKET.get());
@@ -633,6 +634,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModBlocks.SANDBAG.get());
                         pOutput.accept(ModBlocks.GUANO_CANDLE.get());
                         pOutput.accept(ModBlocks.SUPPLY_CRATE.get());
+                        pOutput.accept(ModBlocks.MOB_TRAP.get());
                         pOutput.accept(ModBlocks.POWDER_KEG.get());
                         pOutput.accept(ModBlocks.NITRO_KEG.get());
                         pOutput.accept(ModBlocks.PENETRATOR.get());

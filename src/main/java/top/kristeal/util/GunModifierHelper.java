@@ -4,7 +4,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import top.kristeal.common.Gun;
-import top.kristeal.common.GunStackData;
 import top.kristeal.interfaces.IGunModifier;
 import top.kristeal.item.GunItem;
 import top.kristeal.item.attachment.IAttachment;

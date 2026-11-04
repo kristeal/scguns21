@@ -229,6 +229,7 @@ public class Config
         public final Gunsmith Gunsmith;
         public final ExoSuitCores exoSuitCores;
         public final Raids raids;
+        public final Banzai banzai;
 
 
         public Common(ModConfigSpec.Builder builder)
@@ -246,6 +247,7 @@ public class Config
                 this.Gunsmith = new Gunsmith(builder);
                 this.exoSuitCores = new ExoSuitCores(builder);
                 this.raids = new Raids(builder);
+                this.banzai = new Banzai(builder);
             }
             builder.pop();
         }
@@ -254,7 +256,6 @@ public class Config
         public final ModConfigSpec.BooleanValue raidsEnabled;
         public final ModConfigSpec.BooleanValue flareRaids;
         public final ModConfigSpec.BooleanValue nightlyRaids;
-        public final ModConfigSpec.BooleanValue nightlyRaidsInResearchMode;
         public final ModConfigSpec.DoubleValue nightlyRaidChance;
         public final ModConfigSpec.IntValue minDaysBetweenRaids;
         public final ModConfigSpec.IntValue warningTime;
@@ -275,16 +276,12 @@ public class Config
                         .define("raidsEnabled", true);
 
                 this.flareRaids = builder
-                        .comment("If enabled, raid flares fired from a Flare Pistol start their raid around the shooter (both progression modes).")
+                        .comment("If enabled, raid flares fired from a Flare Pistol start their raid around the shooter.")
                         .define("flareRaids", true);
 
                 this.nightlyRaids = builder
-                        .comment("Raid mode: if enabled, a raid matching a player's raid level (from their gun tier) can come for them at night.")
+                        .comment("If enabled, a raid matching a player's raid level (from their gun tier) can come for them at night.")
                         .define("nightlyRaids", true);
-
-                this.nightlyRaidsInResearchMode = builder
-                        .comment("If enabled, nightly raids also happen in Research mode (gun tiers are tracked there too).")
-                        .define("nightlyRaidsInResearchMode", false);
 
                 this.nightlyRaidChance = builder
                         .comment("Chance each night for a raid to be scheduled near a valid player (0.0 = never, 1.0 = always).")
@@ -417,7 +414,7 @@ public class Config
                 this.ammoBoxCapacityMultiplier = builder.comment("Multiplier to adjust the capacity of all ammo boxes.").defineInRange("ammoBoxCapacityMultiplier", 1.0, 0.1, 100.0);
                 this.enableGunDamage = builder.comment("If true, guns will be damageable and can break, coward if you toggle this").define("enableGunDamage", true);
                 this.enableAttachmentDamage = builder.comment("If true, gun attachments will be damageable and can break, also a coward").define("enableAttachmentDamage", true);
-                this.spawnCasings = builder.comment("Set to false to disable the spawning of casing items when firing guns.").define("gameplay.spawnCasings", true);
+                this.spawnCasings = builder.comment("Set to false to disable the spawning of casing items when firing guns.").define("spawnCasings", true);
                 this.growBoundingBoxAmount = builder.comment("The extra amount to expand an entity's bounding box when checking for projectile collision. Setting this value higher will make it easier to hit entities").defineInRange("growBoundingBoxAmount", 0.3, 0.0, 1.0);
                 this.enableHeadShots = builder.comment("Enables the check for head shots for players. Projectiles that hit the head of a player will have increased damage.").define("enableHeadShots", true);
                 this.headShotDamageMultiplier = builder.comment("The value to multiply the damage by if projectile hit the players head").defineInRange("headShotDamageMultiplier", 1.25, 1.0, Double.MAX_VALUE);
@@ -498,6 +495,65 @@ public class Config
                 this.enableShotgunBreaching = builder.comment("If true, a block struck by enough pellets from a single player shot is broken. Only applies if enableBlockBreaking is also true").define("enableShotgunBreaching", true);
                 this.shotgunBreachPelletThreshold = builder.comment("A block breaks once more than this many pellets from one shot hit it").defineInRange("shotgunBreachPelletThreshold", 10, 1, 100);
                 this.shotgunBreachMaxHardness = builder.comment("The hardest block a shotgun breach can break. Wooden doors are 3.0, iron doors 5.0").defineInRange("shotgunBreachMaxHardness", 3.0, 0.0, 50.0);
+            }
+            builder.pop();
+        }
+    }
+
+    /**
+     * Banzai charge related config options
+     */
+    public static class Banzai
+    {
+        public final ModConfigSpec.IntValue banzaiGraceTicks;
+        public final ModConfigSpec.IntValue banzaiCooldownTicks;
+        public final ModConfigSpec.DoubleValue banzaiEnchantFactor;
+        public final ModConfigSpec.DoubleValue banzaiFullDamage;
+        public final ModConfigSpec.DoubleValue banzaiDamagePerLevel;
+        public final ModConfigSpec.DoubleValue banzaiFullChargeDistance;
+        public final ModConfigSpec.DoubleValue banzaiAoe;
+        public final ModConfigSpec.DoubleValue banzaiHitRadius;
+        public final ModConfigSpec.DoubleValue banzaiConeCos;
+
+        public Banzai(ModConfigSpec.Builder builder)
+        {
+            builder.comment("Properties related to the banzai charge").push("banzai");
+            {
+                this.banzaiGraceTicks = builder
+                        .comment("How many ticks a banzai charge survives after its requirements stop being met (e.g. no longer sprinting).")
+                        .defineInRange("banzaiGraceTicks", 5, 0, 50);
+
+                this.banzaiCooldownTicks = builder
+                        .comment("Cooldown in ticks applied to the weapon after a banzai charge ends.")
+                        .defineInRange("banzaiCooldownTicks", 40, 0, 500);
+
+                this.banzaiEnchantFactor = builder
+                        .comment("Scaling factor applied to bayonet enchantment damage during a banzai charge (0.0 = none, 1.0 = full).")
+                        .defineInRange("banzaiEnchantFactor", 0.70D, 0.0D, 1.0D);
+
+                this.banzaiFullDamage = builder
+                        .comment("Extra damage dealt by a fully charged banzai hit.")
+                        .defineInRange("banzaiFullDamage", 10.0D, 0.0D, 1000.0D);
+
+                this.banzaiDamagePerLevel = builder
+                        .comment("Percentage bonus applied per banzai enchantment level.")
+                        .defineInRange("banzaiDamagePerLevel", 0.15D, 0.0D, 10.0D);
+
+                this.banzaiFullChargeDistance = builder
+                        .comment("Blocks of sprinting needed for maximum damage.")
+                        .defineInRange("banzaiFullChargeDistance", 8.0D, 0.5D, 100.0D);
+
+                this.banzaiAoe = builder
+                        .comment("Radius (blocks) in front of the player that triggers a hit.")
+                        .defineInRange("banzaiAoe", 1.5D, 0.0D, 16.0D);
+
+                this.banzaiHitRadius = builder
+                        .comment("Radius within which targets take damage.")
+                        .defineInRange("banzaiHitRadius", 2.5D, 0.0D, 16.0D);
+
+                this.banzaiConeCos = builder
+                        .comment("Cosine of the half-angle of the frontal hit cone. 0.5 = 60 degrees, 1.0 = straight ahead only, -1.0 = all around.")
+                        .defineInRange("banzaiConeCos", 0.5D, -1.0D, 1.0D);
             }
             builder.pop();
         }
@@ -709,7 +765,6 @@ public class Config
         public final ModConfigSpec.BooleanValue enableCameraRecoil;
         public final ModConfigSpec.IntValue cooldownThreshold;
         public final Progression progression;
-        public final Research research;
         public final Experimental experimental;
 
         public Server(ModConfigSpec.Builder builder)
@@ -738,57 +793,21 @@ public class Config
                 this.cooldownThreshold = builder.comment("The maximum amount of cooldown time remaining before the server will accept another shoot packet from a client. This allows for a litle slack since the server may be lagging").defineInRange("cooldownThreshold", 0, 75, 1000);
 
                 this.progression = new Progression(builder);
-                this.research = new Research(builder);
                 this.experimental = new Experimental(builder);
             }
             builder.pop();
         }
 
-        /** Which progression the world uses, and the gun tiers both modes track. */
+        /** Gun tier options. */
         public static class Progression
         {
-            public final ModConfigSpec.EnumValue<top.kristeal.progression.ProgressionMode> mode;
             public final ModConfigSpec.BooleanValue showTierMessages;
-            public final ModConfigSpec.BooleanValue blueprintsGrantTier;
 
             public Progression(ModConfigSpec.Builder builder)
             {
-                builder.comment("Progression mode and gun tiers").push("progression");
+                builder.comment("Gun tiers").push("progression");
                 {
-                    this.mode = builder.comment("RAID: the original loop. Gun tiers unlock nightly raids, raid bosses drop the trophies that craft the next blueprint, and the Gun Bench needs no research.",
-                            "RESEARCH: blueprints are found in structure loot and researched at the Research Station; prototypes at partial research.",
-                            "Gun tiers are tracked in both modes, so the mode can be switched at any time (also with /scguns progression mode).").defineEnum("mode", top.kristeal.progression.ProgressionMode.RAID);
                     this.showTierMessages = builder.comment("If true, players get a chat message when they unlock a gun tier, listing the mob tiers and raids it unlocks.").define("showTierMessages", false);
-                    this.blueprintsGrantTier = builder.comment("Research mode only: getting a blueprint unlocks its gun tier (as if a gun of that tier had been picked up).").define("blueprintsGrantTier", true);
-                }
-                builder.pop();
-            }
-        }
-
-        /** Research progression: blueprint research gating and prototypes. */
-        public static class Research
-        {
-            public final ModConfigSpec.BooleanValue requireResearch;
-            public final ModConfigSpec.BooleanValue prototypesEnabled;
-            public final ModConfigSpec.DoubleValue prototypeThreshold;
-            public final ModConfigSpec.DoubleValue prototypeDamageMultiplier;
-            public final ModConfigSpec.DoubleValue researchTimeMultiplier;
-            public final ModConfigSpec.DoubleValue materialCostMultiplier;
-            public final ModConfigSpec.IntValue researchEnergyPerTick;
-            public final ModConfigSpec.DoubleValue blueprintLootChanceMultiplier;
-
-            public Research(ModConfigSpec.Builder builder)
-            {
-                builder.comment("Blueprint research and prototypes (Research mode only)").push("research");
-                {
-                    this.requireResearch = builder.comment("If true, a blueprint entry must be researched before it can be crafted. If false, every entry can be crafted as before.").define("requireResearch", true);
-                    this.prototypesEnabled = builder.comment("If true, the Gun Bench can build a weaker prototype of a partly researched gun.").define("prototypesEnabled", true);
-                    this.prototypeThreshold = builder.comment("Research progress (0.0-1.0) at which a prototype of the entry can be crafted.").defineInRange("prototypeThreshold", 0.5, 0.0, 1.0);
-                    this.prototypeDamageMultiplier = builder.comment("Damage multiplier for prototype guns.").defineInRange("prototypeDamageMultiplier", 0.75, 0.0, 1.0);
-                    this.researchTimeMultiplier = builder.comment("Multiplier for every research's duration.").defineInRange("researchTimeMultiplier", 1.0, 0.0, 100.0);
-                    this.materialCostMultiplier = builder.comment("Multiplier for the materials every research step uses (rounded up; at least 1 of each material per research).").defineInRange("materialCostMultiplier", 1.0, 0.0, 10.0);
-                    this.researchEnergyPerTick = builder.comment("Forge Energy (FE) the Research Station uses per tick while researching. 0 means it needs no power.").defineInRange("researchEnergyPerTick", 32, 0, 1000);
-                    this.blueprintLootChanceMultiplier = builder.comment("Multiplier for the chance of finding a blueprint in structure loot (1.0: the chances in the loot tables; 0: never).").defineInRange("blueprintLootChanceMultiplier", 1.0, 0.0, 10.0);
                 }
                 builder.pop();
             }
@@ -834,12 +853,6 @@ public class Config
     public static boolean isClientConfigLoaded()
     {
         return clientSpec.isLoaded();
-    }
-
-
-    public static boolean isServerConfigLoaded()
-    {
-        return serverSpec.isLoaded();
     }
 
     public static void saveClientConfig()

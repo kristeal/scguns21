@@ -67,7 +67,6 @@ import top.kristeal.client.screen.CryoniterScreen;
 import top.kristeal.client.screen.ExoSuitScreen;
 import top.kristeal.client.screen.SupplyScampScreen;
 import top.kristeal.client.screen.GunBenchScreen;
-import top.kristeal.client.screen.ResearchStationScreen;
 import top.kristeal.client.screen.LightningBatteryScreen;
 import top.kristeal.client.screen.MaceratorScreen;
 import top.kristeal.client.screen.MechanicalPressScreen;
@@ -125,7 +124,6 @@ public class ClientHandler {
         event.register(ModMenuTypes.CRYONITER_MENU.get(), CryoniterScreen::new);
         event.register(ModMenuTypes.THERMOLITH_MENU.get(), ThermolithScreen::new);
         event.register(ModMenuTypes.GUN_BENCH.get(), GunBenchScreen::new);
-        event.register(ModMenuTypes.RESEARCH_STATION.get(), ResearchStationScreen::new); // research progression
         event.register(ModMenuTypes.SUPPLY_SCAMP_MENU.get(), SupplyScampScreen::new);
         // Turrets and turret modules
         event.register(ModMenuTypes.SHELL_CATCHER_MODULE.get(), ShellCatcherModuleScreen::new);
@@ -548,8 +546,8 @@ public class ClientHandler {
         }
         boolean charging = MeleeAttackHandler.isBanzaiActive(mc.player);
         if (wasCharging && !charging) {
-            banzaiCooldown = MeleeAttackHandler.BANZAI_COOLDOWN_TICKS;
-            ClientMeleeAttackHandler.showMeleeCooldown(MeleeAttackHandler.BANZAI_COOLDOWN_TICKS);
+            banzaiCooldown = MeleeAttackHandler.banzaiCooldownTicks();
+            ClientMeleeAttackHandler.showMeleeCooldown(MeleeAttackHandler.banzaiCooldownTicks());
             banzaiRequested = false;
         }
         wasCharging = charging;

@@ -5,8 +5,5 @@
   "raid_level": 1,
   "mob_tiers": [
     "antique"
-  ],
-  "blueprints": [
-    "scguns:frontier_blueprint"
   ]
 }

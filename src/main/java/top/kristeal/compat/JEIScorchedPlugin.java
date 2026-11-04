@@ -18,10 +18,6 @@ import top.kristeal.Reference;
 import top.kristeal.client.screen.*;
 import top.kristeal.init.ModBlocks;
 import top.kristeal.init.ModItems;
-import top.kristeal.progression.ProgressionMode;
-import top.kristeal.research.ResearchHelper;
-import mezz.jei.api.runtime.IJeiRuntime;
-import javax.annotation.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -30,41 +26,6 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class JEIScorchedPlugin implements IModPlugin {
-    @Nullable private static IJeiRuntime runtime;
-    private static boolean researchHidden;
-
-    @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        runtime = jeiRuntime;
-        researchHidden = false;
-        onProgressionModeChanged();
-    }
-
-    @Override
-    public void onRuntimeUnavailable() {
-        runtime = null;
-    }
-
-    /** Raid mode hides the research category and the Research Station; Research mode shows them again. */
-    public static void onProgressionModeChanged() {
-        if (runtime == null) {
-            return;
-        }
-        boolean hide = !ProgressionMode.isResearch();
-        if (hide == researchHidden) {
-            return;
-        }
-        researchHidden = hide;
-        List<ItemStack> station = List.of(new ItemStack(ModBlocks.RESEARCH_STATION.get()));
-        if (hide) {
-            runtime.getRecipeManager().hideRecipeCategory(ResearchCategory.RESEARCH_TYPE);
-            runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, station);
-        } else {
-            runtime.getRecipeManager().unhideRecipeCategory(ResearchCategory.RESEARCH_TYPE);
-            runtime.getIngredientManager().addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, station);
-        }
-    }
-
     @Override
     public ResourceLocation getPluginUid() {
         return Reference.id("jei_plugin");
@@ -79,7 +40,6 @@ public class JEIScorchedPlugin implements IModPlugin {
         registration.addRecipeCategories(new MechanicalPressCategory(guiHelper));
         registration.addRecipeCategories(new PoweredMechanicalPressCategory(guiHelper));
         registration.addRecipeCategories(new LightningBatteryCategory(guiHelper));
-        registration.addRecipeCategories(new ResearchCategory(guiHelper)); // research progression
 
     }
     public static MutableComponent getTranslation(String key, Object... args) {
@@ -148,36 +108,18 @@ public class JEIScorchedPlugin implements IModPlugin {
         registration.addRecipes(PoweredMechanicalPressCategory.POWERED_MECHANICAL_PRESS_TYPE, poweredMechanicalPressRecipes);
         registration.addRecipes(LightningBatteryCategory.LIGHTNING_BATTERY_TYPE, recipeManager.getAllRecipesFor(LightningBatteryRecipe.Type.INSTANCE).stream().map(RecipeHolder::value).toList());
 
-        // Research recipes and a short blueprint description (sources are left to loot addons). The text follows the
-        // progression mode at the time JEI loads; a mode switch shows the other one after the next rejoin or /reload.
-        registration.addRecipes(ResearchCategory.RESEARCH_TYPE, ResearchHelper.getRecipes(recipeManager).stream().map(RecipeHolder::value).toList());
+        // A short blueprint description (sources are left to loot addons)
         for (var blueprint : List.of(ModItems.ANTIQUE_BLUEPRINT, ModItems.FRONTIER_BLUEPRINT, ModItems.COPPER_BLUEPRINT, ModItems.IRON_BLUEPRINT,
                 ModItems.WRECKER_BLUEPRINT, ModItems.TREATED_BRASS_BLUEPRINT, ModItems.DIAMOND_STEEL_BLUEPRINT, ModItems.PIGLIN_BLUEPRINT,
                 ModItems.OCEAN_BLUEPRINT, ModItems.DEEP_DARK_BLUEPRINT, ModItems.END_BLUEPRINT, ModItems.SCORCHED_BLUEPRINT, ModItems.EXO_SUIT_BLUEPRINT)) {
             registration.addIngredientInfo(new ItemStack(blueprint.get()), VanillaTypes.ITEM_STACK,
-                    getTranslation(ProgressionMode.isResearch() ? "jei.info.blueprint_research" : "jei.info.blueprint_raid"));
+                    getTranslation("jei.info.blueprint_raid"));
         }
-        registration.addIngredientInfo(new ItemStack(ModBlocks.RESEARCH_STATION.get()), VanillaTypes.ITEM_STACK, getTranslation("jei.info.research_station"));
-
-
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(GunBenchScreen.class, 100, 47, 30, 20, GunBenchCategory.GUN_BENCH_TYPE);
-        registration.addRecipeClickArea(ResearchStationScreen.class, 152, 82, 17, 15, ResearchCategory.RESEARCH_TYPE); // The arrow to the blueprint slot
-        // R/U on the station's (drawn) material slots
-        registration.addGuiContainerHandler(ResearchStationScreen.class, new mezz.jei.api.gui.handlers.IGuiContainerHandler<>() {
-            @Override
-            public java.util.Optional<? extends mezz.jei.api.runtime.IClickableIngredient<?>> getClickableIngredientUnderMouse(
-                    mezz.jei.api.gui.builder.IClickableIngredientFactory builder, ResearchStationScreen screen, double mouseX, double mouseY) {
-                ResearchStationScreen.MaterialHit hit = screen.getMaterialUnderMouse(mouseX, mouseY);
-                if (hit == null) {
-                    return java.util.Optional.empty();
-                }
-                return builder.createBuilder(hit.stack()).buildWithArea(hit.area());
-            }
-        });
         registration.addRecipeClickArea(MaceratorScreen.class, 80, 25, 30, 20, MaceratorCategory.MACERATING_TYPE);
         registration.addRecipeClickArea(PoweredMaceratorScreen.class, 80, 25, 25, 20, PoweredMaceratorCategory.POWERED_MACERATING_TYPE);
         registration.addRecipeClickArea(MechanicalPressScreen.class, 80, 25, 25, 20, MechanicalPressCategory.MECHANICAL_PRESS_TYPE);
@@ -188,7 +130,6 @@ public class JEIScorchedPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GUN_BENCH.get()), GunBenchCategory.GUN_BENCH_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.RESEARCH_STATION.get()), ResearchCategory.RESEARCH_TYPE); // research progression
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MACERATOR.get()), MaceratorCategory.MACERATING_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.POWERED_MACERATOR.get()), PoweredMaceratorCategory.POWERED_MACERATING_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MECHANICAL_PRESS.get()), MechanicalPressCategory.MECHANICAL_PRESS_TYPE);

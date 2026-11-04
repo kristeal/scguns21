@@ -1,5 +1,4 @@
 package top.kristeal.compat;
-import top.kristeal.progression.ProgressionMode;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -82,13 +81,7 @@ public class GunBenchCategory implements IRecipeCategory<GunBenchRecipe> {
         Ingredient blueprint = recipe.getBlueprint();
         if (!blueprint.isEmpty()) {
             builder.addSlot(RecipeIngredientRole.INPUT, slotX[10] + slotOffsetX, slotY[10] + slotOffsetY)
-                    .addIngredients(blueprint)
-                    // Research mode: the blueprint must have this entry researched
-                    .addRichTooltipCallback((slotView, tooltip) -> {
-                        if (ProgressionMode.isResearch()) {
-                            tooltip.add(Component.translatable("jei.scguns.gun_bench.needs_research").withStyle(ChatFormatting.GOLD));
-                        }
-                    });
+                    .addIngredients(blueprint);
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 140 + slotOffsetX, 44 + slotOffsetY)

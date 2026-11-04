@@ -8,11 +8,10 @@ Changes in this port:
   - Bayonet behaviour was slightly changed, might feel better to use now.
   - Framework is no longer a dependency
   - Some smaller bugs from the original mod was fixed.
-  - Added compatibiltiy for Sable ( bullets now interact with sable objects)
+  - Added compatibiltiy for Sable ( bullets now interact with sable objects and turrets can now target and shoot from sable objects.)
   - Added ability for shotguns to break blocks (can be configured if more than 10 pellets strike one they break, similar to heavier guns)
-  - Added an experimental progression system (can be turned on, it is off by default): that tries to imitate progression similar to earlier versions, by having to find blueprints, and  then research the guns from them using a new block.
   
-### Everything else behaves the same, if it doesn't, report it either here, or on my [DISCORD](https://discord.gg/yCRacrxczE) along with other bugs/incompatibilities you may find!
+### Everything else behaves the same, if it doesn't, report it here (I'll add the Discord link back, soon™) !
 
 ## Requirements
 

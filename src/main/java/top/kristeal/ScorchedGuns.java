@@ -53,18 +53,14 @@ public class ScorchedGuns {
         ModSounds.REGISTER.register(modEventBus);
         modEventBus.addListener(PacketHandler::register);
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
-        NeoForge.EVENT_BUS.addListener(top.kristeal.research.ResearchCommand::onRegisterCommands); // /scguns research
         NeoForge.EVENT_BUS.addListener(top.kristeal.entity.raid.RaidCommand::onRegisterCommands); // /scguns raid
         NeoForge.EVENT_BUS.addListener(top.kristeal.progression.ProgressionCommand::onRegisterCommands); // /scguns progression
-        // Gun tiers (player data) and the progression-mode advancement trigger
+        // Gun tiers (player data) and the progression advancement triggers
         top.kristeal.progression.PlayerGunProgression.register(modEventBus);
-        top.kristeal.progression.ProgressionModeTrigger.register(modEventBus);
         top.kristeal.progression.ProgressionTriggers.register(modEventBus); // gun_tier, raid_won
-        top.kristeal.progression.BlueprintLootCondition.register(modEventBus); // Research-mode blueprint loot
         ModRecipes.register(modEventBus);
         // Item components, synced player state, gun attributes
         ModDataComponents.REGISTER.register(modEventBus);
-        top.kristeal.research.ResearchItemPredicate.register(modEventBus); // Advancement predicate
         ModSyncedDataKeys.REGISTER.register(modEventBus);
         SCAttributes.ATTRIBUTES.register(modEventBus);
         modEventBus.addListener(this::onCommonSetup); // Projectile factories, improved hitboxes

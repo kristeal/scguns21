@@ -14,10 +14,6 @@
       "required": false
     },
     {
-      "id": "scguns:research_station",
-      "required": false
-    },
-    {
       "id": "scguns:geothermal_vent",
       "required": false
     },

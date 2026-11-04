@@ -17,28 +17,22 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * Operator commands for gun tiers and the progression mode (the reference's {@code /scguns progression} subcommands,
- * plus {@code mode} and {@code raidlevel}):
+ * Operator commands for gun tiers (the reference's {@code /scguns progression} subcommands, plus {@code raidlevel}):
  * <ul>
  *     <li>{@code /scguns progression set <player> <tier>}</li>
  *     <li>{@code /scguns progression clear <player>}</li>
  *     <li>{@code /scguns progression check [player]}</li>
  *     <li>{@code /scguns progression raidlevel <player> <level>}</li>
- *     <li>{@code /scguns progression mode [raid|research]}: show or switch the world's progression</li>
  * </ul>
  */
 public final class ProgressionCommand
 {
     private static final SuggestionProvider<CommandSourceStack> TIER_SUGGESTIONS = (context, builder) ->
             SharedSuggestionProvider.suggest(GunTierManager.getAllTiers().stream().map(GunTier::id), builder);
-    private static final SuggestionProvider<CommandSourceStack> MODE_SUGGESTIONS = (context, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.stream(ProgressionMode.values()).map(m -> m.name().toLowerCase(Locale.ROOT)), builder);
 
     private ProgressionCommand() {}
 
@@ -67,12 +61,7 @@ public final class ProgressionCommand
                         .then(Commands.literal("raidlevel")
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .then(Commands.argument("level", IntegerArgumentType.integer(0, 100))
-                                                .executes(ProgressionCommand::raidLevel))))
-                        .then(Commands.literal("mode")
-                                .executes(ProgressionCommand::showMode)
-                                .then(Commands.argument("mode", StringArgumentType.word())
-                                        .suggests(MODE_SUGGESTIONS)
-                                        .executes(ProgressionCommand::setMode)))));
+                                                .executes(ProgressionCommand::raidLevel))))));
     }
 
     private static int set(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
@@ -126,28 +115,6 @@ public final class ProgressionCommand
         int level = IntegerArgumentType.getInteger(context, "level");
         PlayerGunProgression.setRaidLevel(player, level);
         context.getSource().sendSuccess(() -> Component.translatable("commands.scguns.progression.raid_level_set", player.getDisplayName(), level), true);
-        return 1;
-    }
-
-    private static int showMode(CommandContext<CommandSourceStack> context)
-    {
-        ProgressionMode mode = ProgressionMode.get();
-        context.getSource().sendSuccess(() -> Component.translatable("commands.scguns.progression.mode",
-                Component.translatable("progression.scguns.mode." + mode.name().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GOLD)), false);
-        return mode.ordinal();
-    }
-
-    private static int setMode(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
-    {
-        String name = StringArgumentType.getString(context, "mode");
-        ProgressionMode mode = Arrays.stream(ProgressionMode.values())
-                .filter(m -> m.name().equalsIgnoreCase(name))
-                .findFirst()
-                .orElseThrow(() -> new SimpleCommandExceptionType(Component.translatable("commands.scguns.progression.invalid_mode", name)).create());
-
-        ProgressionMode.set(context.getSource().getServer(), mode);
-        context.getSource().sendSuccess(() -> Component.translatable("commands.scguns.progression.mode_set",
-                Component.translatable("progression.scguns.mode." + mode.name().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GOLD)), true);
         return 1;
     }
 }

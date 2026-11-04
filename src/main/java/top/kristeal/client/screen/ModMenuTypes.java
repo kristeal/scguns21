@@ -61,10 +61,6 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<GunBenchMenu>> GUN_BENCH
             = registerMenuType("gun_bench", GunBenchMenu::new);
 
-    // Research progression
-    public static final DeferredHolder<MenuType<?>, MenuType<ResearchStationMenu>> RESEARCH_STATION
-            = registerMenuType("research_station", ResearchStationMenu::new);
-
     public static final DeferredHolder<MenuType<?>, MenuType<ExoSuitMenu>> EXOSUIT_MENU =
             MENUS.register("exosuit_menu", () -> IMenuTypeExtension.create(ExoSuitMenu::new));
 

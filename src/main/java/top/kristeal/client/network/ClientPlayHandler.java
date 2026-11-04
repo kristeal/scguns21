@@ -23,8 +23,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeManager;
 import top.kristeal.item.BlueprintItem;
-import top.kristeal.research.ResearchHelper;
-import top.kristeal.research.ResearchRecipe;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -64,7 +62,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import top.kristeal.Config;
-import top.kristeal.progression.ProgressionMode;
 import net.neoforged.fml.ModList;
 import top.kristeal.compat.SableCompat;
 import top.kristeal.client.particle.BloodParticle;
@@ -306,55 +303,6 @@ public class ClientPlayHandler {
     @Nullable
     public static String getBlueprintActiveRecipeName(ItemStack blueprint) {
         return BlueprintScreen.getActiveRecipeName(blueprint);
-    }
-
-    /** Research progression: the blueprint tooltip's research summary. */
-    public static void addBlueprintResearchTooltip(ItemStack blueprint, List<Component> tooltip) {
-        Level level = Minecraft.getInstance().level;
-        if (level == null || !ProgressionMode.isResearch()) {
-            return;
-        }
-        RecipeManager recipes = level.getRecipeManager();
-        List<ResearchRecipe> entries = ResearchHelper.getRecipesFor(recipes, blueprint.getItem());
-        if (entries.isEmpty()) {
-            return;
-        }
-        int researched = 0;
-        int prototypes = 0;
-        for (ResearchRecipe entry : entries) {
-            switch (ResearchHelper.getState(blueprint, entry)) {
-                case RESEARCHED -> researched++;
-                case PROTOTYPE -> prototypes++;
-                default -> {}
-            }
-        }
-        tooltip.add(Component.translatable("item.scguns.blueprint.tooltip.researched", researched, entries.size())
-                .withStyle(ChatFormatting.GOLD));
-        if (prototypes > 0) {
-            tooltip.add(Component.translatable("item.scguns.blueprint.tooltip.prototypes", prototypes)
-                    .withStyle(ChatFormatting.GRAY));
-        }
-
-        ResourceLocation activeRecipeId = BlueprintItem.getActiveRecipe(blueprint);
-        if (activeRecipeId != null) {
-            recipes.byKey(activeRecipeId).ifPresent(holder -> {
-                ItemStack result = holder.value().getResultItem(level.registryAccess());
-                ResearchHelper.find(recipes, blueprint.getItem(), result.getItem()).ifPresent(entry ->
-                        tooltip.add(Component.translatable("item.scguns.blueprint.tooltip.active_research",
-                                        Math.round(ResearchHelper.getProgress(blueprint, entry) * 100))
-                                .withStyle(ChatFormatting.GRAY)));
-            });
-        }
-    }
-
-    /** The server's progression mode: stored for a remote server, then the research UI is shown or hidden. */
-    public static void handleProgressionMode(ProgressionMode mode, boolean remote) {
-        if (remote) {
-            ProgressionMode.setClientOverride(mode);
-        }
-        if (ModList.get().isLoaded("jei")) {
-            top.kristeal.compat.JEIScorchedPlugin.onProgressionModeChanged();
-        }
     }
 
     // Gun definitions and custom guns from the server, on join and /reload

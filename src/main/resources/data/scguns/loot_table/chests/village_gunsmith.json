@@ -92,26 +92,6 @@
         "max": 5.0,
         "min": 1.0
       }
-    },
-    {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "scguns:blueprint_chance",
-          "chance": 0.25
-        }
-      ],
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "scguns:antique_blueprint"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "scguns:frontier_blueprint"
-        }
-      ]
     }
   ],
   "random_sequence": "minecraft:chests/village_gunsmith"

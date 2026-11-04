@@ -210,7 +210,7 @@ public class GunBenchMenu extends AbstractContainerMenu {
                         .map(RecipeHolder::value);
 
                 if (recipe.isPresent()) {
-                    ItemStack result = recipe.get().assembleResearched(new RecipeWrapper(new InvWrapper(craftingContainer)), level); // research progression
+                    ItemStack result = recipe.get().assemble(new RecipeWrapper(new InvWrapper(craftingContainer)), level.registryAccess());
                     container.setItem(SLOT_OUTPUT, result);
                 } else {
                     container.setItem(SLOT_OUTPUT, ItemStack.EMPTY);

@@ -17,7 +17,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 import top.kristeal.common.GunStackData;
-import top.kristeal.research.ResearchHelper;
 
 import java.util.List;
 
@@ -52,21 +51,7 @@ public class GunBenchRecipe implements Recipe<RecipeWrapper> {
                 return false;
             }
         }
-        // Research progression: the entry must be researched far enough
-        return ResearchHelper.getCraftState(level.getRecipeManager(), blueprintStack, output.getItem()) != ResearchHelper.State.LOCKED;
-    }
-
-    /**
-     * Research progression: the bench's result for the blueprint in the input. The real item at full
-     * research, a prototype (same item with the {@code scguns:prototype} component) at the prototype stage.
-     */
-    public ItemStack assembleResearched(RecipeWrapper container, Level level) {
-        ItemStack result = assemble(container, level.registryAccess());
-        ItemStack blueprintStack = container.getItem(GunBenchMenu.SLOT_BLUEPRINT);
-        if (ResearchHelper.getCraftState(level.getRecipeManager(), blueprintStack, result.getItem()) == ResearchHelper.State.PROTOTYPE) {
-            GunStackData.setPrototype(result, true);
-        }
-        return result;
+        return true;
     }
 
 

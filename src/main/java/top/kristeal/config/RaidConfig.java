@@ -188,7 +188,7 @@ public class RaidConfig
         return RAIDS_BY_ID.values().stream().filter(raid -> raid.raidLevel() != null && raid.raidLevel() >= 1 && raid.raidLevel() <= level).toList();
     }
 
-    /** Whether nightly raids run in the current progression mode. */
+    /** Whether nightly raids are enabled. */
     public static boolean nightlyRaidsActive()
     {
         Config.Raids raids = Config.COMMON.raids;
@@ -196,7 +196,7 @@ public class RaidConfig
         {
             return false;
         }
-        return top.kristeal.progression.ProgressionMode.isRaid() || raids.nightlyRaidsInResearchMode.get();
+        return true;
     }
 
     @Nullable

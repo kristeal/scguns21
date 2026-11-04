@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Unlocks gun tiers the reference way: picking up, crafting or taking from the Gun Bench an item in a tier tag, and on
- * login, any such item in the inventory. In Research mode, getting a blueprint unlocks its tier too.
+ * login, any such item in the inventory.
  * <p>
  * Port notes: the inventory is also scanned every five  seconds, so items from trades, chests, commands or the creative
  * menu count without a rejoin (the reference only scanned on login). The reference read the tier-message option from
@@ -58,7 +58,7 @@ public class GunProgressionEventHandler
             return;
         }
         scanInventory(player);
-        // Tier advancements for a tier reached before they existed (or before a mode switch)
+        // Tier advancements for a tier reached before they existed
         ProgressionTriggers.GUN_TIER.get().trigger(player, PlayerGunProgression.getTier(player));
     }
 
@@ -80,10 +80,6 @@ public class GunProgressionEventHandler
     private static void check(ServerPlayer player, ItemStack stack)
     {
         GunTier tier = PlayerGunProgression.unlockFromItem(player, stack);
-        if (tier == null && blueprintsGrantTier())
-        {
-            tier = PlayerGunProgression.unlockFromBlueprint(player, stack);
-        }
         if (tier != null)
         {
             sendTierUnlockedMessage(player, tier);
@@ -92,15 +88,10 @@ public class GunProgressionEventHandler
 
     private static void scanInventory(ServerPlayer player)
     {
-        boolean blueprints = blueprintsGrantTier();
         GunTier unlocked = null;
         for (ItemStack stack : player.getInventory().items)
         {
             GunTier tier = PlayerGunProgression.unlockFromItem(player, stack);
-            if (tier == null && blueprints)
-            {
-                tier = PlayerGunProgression.unlockFromBlueprint(player, stack);
-            }
             if (tier != null)
             {
                 unlocked = tier;
@@ -110,11 +101,6 @@ public class GunProgressionEventHandler
         {
             sendTierUnlockedMessage(player, unlocked);
         }
-    }
-
-    private static boolean blueprintsGrantTier()
-    {
-        return ProgressionMode.isResearch() && Config.SERVER.progression.blueprintsGrantTier.get();
     }
 
     public static void sendTierUnlockedMessage(Player player, @Nullable GunTier tier)

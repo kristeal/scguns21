@@ -6,8 +6,5 @@
   "mob_tiers": [
     "frontier",
     "antique"
-  ],
-  "blueprints": [
-    "scguns:copper_blueprint"
   ]
 }

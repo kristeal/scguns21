@@ -71,8 +71,6 @@ public class BlueprintItem extends Item {
         // Port note: the reference checked level.isClientSide; 1.21 tooltips get no level, so this checks the dist
         // (the helper also returns null without a client level)
         if (FMLEnvironment.dist.isClient()) {
-            ClientPlayHandler.addBlueprintResearchTooltip(pStack, pTooltipComponents); // research progression
-
             String activeRecipeName = ClientPlayHandler.getBlueprintActiveRecipeName(pStack);
             if (activeRecipeName != null) {
                 pTooltipComponents.add(Component.translatable("item.scguns.blueprint.tooltip.active_recipe", activeRecipeName)

@@ -3,7 +3,6 @@ package top.kristeal.common;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import top.kristeal.init.ModDataComponents;
@@ -59,20 +58,8 @@ public final class GunStackData {
         stack.set(ModDataComponents.ADDITIONAL_DAMAGE, damage);
     }
 
-    // ---- Prototype ----
-    public static boolean isPrototype(ItemStack stack) {
-        return stack.has(ModDataComponents.PROTOTYPE);
-    }
-
-    public static void setPrototype(ItemStack stack, boolean prototype) {
-        if (prototype) stack.set(ModDataComponents.PROTOTYPE, Unit.INSTANCE);
-        else stack.remove(ModDataComponents.PROTOTYPE);
-    }
-
     // ---- Attachments ----
-    /** A prototype takes no attachments, so it always reads as having none. */
     public static GunAttachments getAttachments(ItemStack stack) {
-        if (isPrototype(stack)) return GunAttachments.EMPTY;
         return stack.getOrDefault(ModDataComponents.ATTACHMENTS, GunAttachments.EMPTY);
     }
 
@@ -85,7 +72,6 @@ public final class GunStackData {
     }
 
     public static void setAttachment(ItemStack stack, String key, ItemStack attachment) {
-        if (isPrototype(stack)) return; // Prototypes take no attachments
         GunAttachments attachments = getAttachments(stack).with(key, attachment);
         if (attachments.isEmpty()) stack.remove(ModDataComponents.ATTACHMENTS);
         else stack.set(ModDataComponents.ATTACHMENTS, attachments);

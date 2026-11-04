@@ -8,7 +8,6 @@ import top.kristeal.common.GunStackData;
 import top.kristeal.interfaces.IGunModifier;
 import top.kristeal.item.GunItem;
 import top.kristeal.item.attachment.IAttachment;
-import top.kristeal.research.ResearchHelper;
 
 /**
  * Author: MrCrayfish
@@ -221,13 +220,8 @@ public class GunModifierHelper
         return finalDamage;
     }
 
-    /** Research progression: prototypes deal less damage (server config prototypeDamageMultiplier). */
-    public static float getPrototypeDamageMultiplier(ItemStack weapon) {
-        return GunStackData.isPrototype(weapon) ? (float) ResearchHelper.prototypeDamageMultiplier() : 1.0F;
-    }
-
     public static float getModifiedDamage(ItemStack weapon, Gun modifiedGun, float damage) {
-        float finalDamage = damage * getPrototypeDamageMultiplier(weapon); // Applies to every gun shot
+        float finalDamage = damage;
         for (int i = 0; i < IAttachment.Type.values().length; i++) {
             IGunModifier[] modifiers = getModifiers(weapon, IAttachment.Type.values()[i]);
             for (IGunModifier modifier : modifiers) {

@@ -55,21 +55,10 @@ public class GunItem extends Item implements IColored, IMeta {
     public Gun getGun() {
         return this.gun;
     }
-    /** Research progression: "Prototype <gun>" for prototypes. */
-    @Override
-    public Component getName(ItemStack stack) {
-        Component name = super.getName(stack);
-        return GunStackData.isPrototype(stack) ? Component.translatable("item.scguns.prototype_name", name) : name;
-    }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Gun modifiedGun = this.getModifiedGun(stack);
-
-        if (GunStackData.isPrototype(stack)) { // research progression
-            tooltip.add(Component.translatable("info.scguns.prototype",
-                    Math.round((1.0F - GunModifierHelper.getPrototypeDamageMultiplier(stack)) * 100)).withStyle(ChatFormatting.RED));
-        }
 
         ResourceLocation advantage = modifiedGun.getProjectile().getAdvantage();
         float baseDamage = modifiedGun.getProjectile().getDamage();
@@ -78,7 +67,6 @@ public class GunItem extends Item implements IColored, IMeta {
         baseDamage = GunEnchantmentHelper.getHeavyShotDamage(stack, baseDamage);
 
         baseDamage *= Config.COMMON.gameplay.globalDamageMultiplier.get().floatValue();
-        baseDamage *= GunModifierHelper.getPrototypeDamageMultiplier(stack); // research progression
         String additionalDamageText = "";
         {
             if (GunStackData.hasAdditionalDamage(stack)) { // Port note: ADDITIONAL_DAMAGE component
@@ -191,12 +179,7 @@ public class GunItem extends Item implements IColored, IMeta {
                 tooltip.add(Component.translatable("info.scguns.ammo_swap_available").withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
             }
         }
-        if (GunStackData.isPrototype(stack)) {
-            // The attachment key only says "prototypes can't take attachments", so the hint says that instead
-            tooltip.add(Component.translatable("info.scguns.prototype_no_attachments").withStyle(ChatFormatting.RED));
-        } else {
-            tooltip.add(Component.translatable("info.scguns.attachment_help", KeyBinds.KEY_ATTACHMENTS.getTranslatedKeyMessage().getString().toUpperCase(Locale.ENGLISH)).withStyle(ChatFormatting.YELLOW));
-        }
+        tooltip.add(Component.translatable("info.scguns.attachment_help", KeyBinds.KEY_ATTACHMENTS.getTranslatedKeyMessage().getString().toUpperCase(Locale.ENGLISH)).withStyle(ChatFormatting.YELLOW));
     }
 
 

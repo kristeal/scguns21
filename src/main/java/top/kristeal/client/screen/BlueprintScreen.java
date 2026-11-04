@@ -1,6 +1,5 @@
 package top.kristeal.client.screen;
 
-import top.kristeal.progression.ProgressionMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,8 +21,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.minecraft.core.registries.BuiltInRegistries;
 import top.kristeal.item.BlueprintItem;
-import top.kristeal.research.ResearchHelper;
-import top.kristeal.research.ResearchRecipe;
 import top.kristeal.network.PacketHandler;
 import top.kristeal.network.message.C2SMessageSetBlueprintRecipe;
 
@@ -521,29 +518,8 @@ public class BlueprintScreen extends Screen {
                 }
 
                 poseStack.popPose();
-
-                // Research mode: this entry's research state, under the description
-                if (ProgressionMode.isResearch()) {
-                    int researchY = descriptionY + (int) (wrappedLines.size() * this.font.lineHeight) + 4;
-                    guiGraphics.drawString(this.font, getResearchLine(level, resultItem), centerX + 22, researchY, 0x212057, false);
-                }
             }
         }
-    }
-
-    private Component getResearchLine(Level level, ItemStack resultItem) {
-        Optional<ResearchRecipe> research = blueprintStack.isEmpty() ? Optional.empty()
-                : ResearchHelper.find(level.getRecipeManager(), blueprintStack.getItem(), resultItem.getItem());
-        if (research.isEmpty()) {
-            return Component.translatable("screen.scguns.blueprint.research.none");
-        }
-        int percent = Math.round(ResearchHelper.getProgress(blueprintStack, research.get()) * 100);
-        String state = switch (ResearchHelper.getCraftState(level.getRecipeManager(), blueprintStack, resultItem.getItem())) {
-            case RESEARCHED -> "researched";
-            case PROTOTYPE -> "prototype";
-            case LOCKED -> "locked";
-        };
-        return Component.translatable("screen.scguns.blueprint.research." + state, percent);
     }
 
     private List<String> wrapText(String text, int maxWidth) {

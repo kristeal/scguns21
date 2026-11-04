@@ -87,12 +87,4 @@ public final class PlayerGunProgression
         GunTier tier = GunTierManager.getTierForItem(stack);
         return unlock(player, tier) ? tier : null;
     }
-
-    /** Research mode: the tier a blueprint unlocks. */
-    @Nullable
-    public static GunTier unlockFromBlueprint(Player player, ItemStack stack)
-    {
-        GunTier tier = GunTierManager.getTierForBlueprint(stack);
-        return unlock(player, tier) ? tier : null;
-    }
 }

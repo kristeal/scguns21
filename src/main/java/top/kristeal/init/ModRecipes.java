@@ -8,7 +8,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import top.kristeal.Reference;
 import top.kristeal.client.screen.*;
-import top.kristeal.research.ResearchRecipe;
 
 public class ModRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
@@ -35,10 +34,6 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<LightningBatteryRecipe>> LIGHTNING_BATTERY_SERIALIZER =
             SERIALIZERS.register("lightning_battery", () -> LightningBatteryRecipe.Serializer.INSTANCE);
 
-    // Research progression
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ResearchRecipe>> RESEARCH_SERIALIZER =
-            SERIALIZERS.register("research", () -> ResearchRecipe.Serializer.INSTANCE);
-
     public static final DeferredHolder<RecipeType<?>, RecipeType<MechanicalPressRecipe>> MECHANICAL_PRESS_TYPE =
             TYPES.register(MechanicalPressRecipe.Type.ID, () -> MechanicalPressRecipe.Type.INSTANCE);
     public static final DeferredHolder<RecipeType<?>, RecipeType<PoweredMechanicalPressRecipe>> POWERED_MECHANICAL_PRESS_TYPE =
@@ -51,9 +46,6 @@ public class ModRecipes {
             TYPES.register(LightningBatteryRecipe.Type.ID, () -> LightningBatteryRecipe.Type.INSTANCE);
     public static final DeferredHolder<RecipeType<?>, RecipeType<GunBenchRecipe>> GUN_BENCH_TYPE =
             TYPES.register(GunBenchRecipe.Type.ID, () -> GunBenchRecipe.Type.INSTANCE);
-
-    public static final DeferredHolder<RecipeType<?>, RecipeType<ResearchRecipe>> RESEARCH_TYPE =
-            TYPES.register(ResearchRecipe.Type.ID, () -> ResearchRecipe.Type.INSTANCE);
 
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);

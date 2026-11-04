@@ -42,9 +42,7 @@ public class C2SMessageAttachments implements CustomPacketPayload {
             if (context.player() instanceof ServerPlayer player) {
                 ItemStack heldItem = player.getMainHandItem();
                 // The gun branch of the reference's ServerPlayHandler.handleAttachments
-                if (heldItem.getItem() instanceof GunItem && GunStackData.isPrototype(heldItem)) {
-                    // Research progression: prototypes take no attachments; the key does nothing (the tooltip says so)
-                } else if (heldItem.getItem() instanceof GunItem) {
+                if (heldItem.getItem() instanceof GunItem) {
                     player.openMenu(new SimpleMenuProvider((windowId, playerInventory, player1) -> new AttachmentContainer(windowId, playerInventory, heldItem),
                             Component.translatable("container.scguns.attachments")));
                 } else if (heldItem.getItem() instanceof ExoSuitItem) {

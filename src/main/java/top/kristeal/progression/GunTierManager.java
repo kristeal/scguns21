@@ -1,10 +1,8 @@
 package top.kristeal.progression;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,7 +23,7 @@ import java.util.*;
 
 /**
  * Loads the gun tiers from {@code data/<ns>/gun_tiers/*.json} (server side). The tier id is the file name for the
- * {@code scguns} namespace and the full id otherwise. Unknown blueprint ids are logged as errors and skipped.
+ * {@code scguns} namespace and the full id otherwise.
  */
 @EventBusSubscriber(modid = Reference.MOD_ID)
 public class GunTierManager extends SimpleJsonResourceReloadListener
@@ -91,25 +89,7 @@ public class GunTierManager extends SimpleJsonResourceReloadListener
             json.getAsJsonArray("mob_tiers").forEach(e -> mobTiers.add(e.getAsString()));
         }
 
-        List<Item> blueprints = new ArrayList<>();
-        if (json.has("blueprints"))
-        {
-            JsonArray array = json.getAsJsonArray("blueprints");
-            for (JsonElement e : array)
-            {
-                ResourceLocation itemId = ResourceLocation.parse(e.getAsString());
-                Optional<Item> item = BuiltInRegistries.ITEM.getOptional(itemId);
-                if (item.isPresent())
-                {
-                    blueprints.add(item.get());
-                }
-                else
-                {
-                    LOGGER.error("Gun tier {} ({}): unknown blueprint '{}'", id, location, itemId);
-                }
-            }
-        }
-        return new GunTier(id, level, order, tag, raidLevel, List.copyOf(mobTiers), List.copyOf(blueprints));
+        return new GunTier(id, level, order, tag, raidLevel, List.copyOf(mobTiers));
     }
 
     /** The tier with this id, or {@link GunTier#NONE}. */
@@ -144,21 +124,6 @@ public class GunTierManager extends SimpleJsonResourceReloadListener
             }
         }
         return null;
-    }
-
-    /** The highest-level tier this blueprint unlocks. */
-    @Nullable
-    public static GunTier getTierForBlueprint(ItemStack stack)
-    {
-        GunTier best = null;
-        for (GunTier tier : ordered)
-        {
-            if (tier.isUnlockedBy(stack) && (best == null || tier.level() > best.level()))
-            {
-                best = tier;
-            }
-        }
-        return best;
     }
 
     /** The highest raid level any tier gives. */

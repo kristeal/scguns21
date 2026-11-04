@@ -136,12 +136,6 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BANJO)
                     .strength(3.0F)
                     .noOcclusion()));
-    // Research progression; placeholder model (the Gun Bench's)
-    public static final DeferredBlock<Block> RESEARCH_STATION = register("research_station",
-            () -> new ResearchStationBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.CRAFTING_TABLE).instrument(NoteBlockInstrument.GUITAR)
-                    .requiresCorrectToolForDrops()
-                    .strength(2.5F)
-                    .noOcclusion()));
     public static final DeferredBlock<Block> GUN_BENCH = register("gun_bench",
             () -> new GunBenchBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.CRAFTING_TABLE).instrument(NoteBlockInstrument.GUITAR)
                     .requiresCorrectToolForDrops()

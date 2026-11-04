@@ -3,6 +3,7 @@ package top.kristeal.client.handler;
 import net.minecraft.server.level.ServerLevel;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
+import top.kristeal.Config;
 import top.kristeal.common.GunStackData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.*;
@@ -44,31 +45,40 @@ import java.util.Map;
 import java.util.UUID;
 
 
+/**
+ * The Reworked, Server-authoritative banzai mechanic. Bayonet stabs and the sprinting Banzai charge.
+ *
+ * <p>Stabs and charges share one cooldown, stored on the gun stack under {@value #MELEE_COOLDOWN_TAG}.
+ * A stab writes the gun's configured melee cooldown; a charge writes {@link #banzaiCooldownTicks()}.
+ * Neither can start while that cooldown runs.
+ *
+ * <p>Charge state is kept per player in {@link #BANZAI_STATES}.
+ * It is mirrored to clients via the synced keys {@code BANZAI} and
+ * {@code BANZAI_CHARGE}, so {@link #isBanzaiActive} reads correctly on both sides.
+ *
+ * <p>All damage, knockback, enchantment effects, sounds and particles are applied here on the server;
+ * the client only plays animations when it receives the S2C packets sent from this class.
+ *
+ * <p>Banzai is fully configurable (see {@link Config.Banzai}): the charge fills over {@link #banzaiFullChargeDistance()} blocks of sprinting and is
+ * triggered by the first target inside {@link #banzaiAoeRadius()}; targets within {@link #banzaiHitRadius()}
+ * take damage, but only inside a cone ahead ({@link #banzaiConeCos()}). A fully charged hit adds
+ * {@link #banzaiFullChargeDamage()} on top of the stab damage, and each Banzai enchantment level adds
+ * {@link #banzaiDamagePerLevel()} of that total. Enchantment damage from bayonet attachments is scaled
+ * by {@link #enchantmentDamageScalingFactor()}.
+ */
 public class MeleeAttackHandler {
-    private static final float ENCHANTMENT_DAMAGE_SCALING_FACTOR = 0.70f;
-    /** Damage a fully built-up charge adds on top of the stab's damage, before the Banzai enchantment. */
-    private static final float BANZAI_FULL_CHARGE_DAMAGE = 10.0F;
-    /** Each Banzai level adds this share of the charge hit's damage. */
-    private static final float BANZAI_DAMAGE_PER_LEVEL = 0.15F;
-    /**
-     * Cooldown after a charge ends (a hit, or the player stopping it). Stabs and charges share one cooldown, the gun's
-     * melee cooldown: a stab sets the gun's own melee cooldown, a charge sets this; neither can start while it runs.
-     */
-    public static final int BANZAI_COOLDOWN_TICKS = 40;
     private static final String MELEE_COOLDOWN_TAG = "MeleeCooldown";
-    /** Blocks of running that fill the charge from empty. */
-    private static final double BANZAI_FULL_CHARGE_DISTANCE = 8.0;
-    private static final double BANZAI_AOE_RADIUS = 1.5;
-    private static final double BANZAI_HIT_RADIUS = 2.5;
-    /** Sprinting can drop for a tick or two (a step, a bump); the charge only ends after this many ticks without it. */
-    private static final int BANZAI_SPRINT_GRACE_TICKS = 5;
-    /** Charge hits only reach targets within 60 degrees of where the player looks. */
-    private static final double BANZAI_CONE_COS = 0.5;
 
-    /**
-     * Server-side state of each running charge. The reference kept one static flag and item for the whole game, so
-     * every player shared one charge, and the client read the server's copy.
-     */
+    private static float enchantmentDamageScalingFactor() { return Config.COMMON.banzai.banzaiEnchantFactor.get().floatValue(); }
+    private static float banzaiFullChargeDamage() { return Config.COMMON.banzai.banzaiFullDamage.get().floatValue(); }
+    private static float banzaiDamagePerLevel() { return Config.COMMON.banzai.banzaiDamagePerLevel.get().floatValue(); }
+    public static int banzaiCooldownTicks() { return Config.COMMON.banzai.banzaiCooldownTicks.get(); }
+    private static double banzaiFullChargeDistance() { return Config.COMMON.banzai.banzaiFullChargeDistance.get(); }
+    private static double banzaiAoeRadius() { return Config.COMMON.banzai.banzaiAoe.get(); }
+    private static double banzaiHitRadius() { return Config.COMMON.banzai.banzaiHitRadius.get(); }
+    private static int banzaiSprintGraceTicks() { return Config.COMMON.banzai.banzaiGraceTicks.get(); }
+    private static double banzaiConeCos() { return Config.COMMON.banzai.banzaiConeCos.get(); }
+
     private static final Map<UUID, BanzaiState> BANZAI_STATES = new HashMap<>();
 
     private static final class BanzaiState {
@@ -76,8 +86,7 @@ public class MeleeAttackHandler {
         private final Item item;
         private Vec3 lastPosition;
         private int ticksNotSprinting;
-        /** Damage built up by running, 0 to 1; spent by a hit. */
-        private double charge;
+        private double charge; // 0 to 1, built up by sprinting, spent by a hit
 
         private BanzaiState(int slot, Item item, Vec3 position) {
             this.slot = slot;
@@ -86,7 +95,7 @@ public class MeleeAttackHandler {
         }
     }
 
-    /** Whether this player's bayonet charge is running. Synced, so it is valid on both sides. */
+    /** True while this player's Banzai charge is running. Synced, so valid on both client and server. */
     public static boolean isBanzaiActive(Player player) {
         return ModSyncedDataKeys.BANZAI.getValue(player);
     }
@@ -111,10 +120,9 @@ public class MeleeAttackHandler {
         boolean wasRunning = state != null;
         resetSyncedBanzai(player);
         if (wasRunning) {
-            // On the gun that charged, also if the player has switched away from it
             ItemStack gunStack = player.getInventory().getItem(state.slot);
             if (gunStack.getItem() == state.item) {
-                long cooldownEnd = player.level().getGameTime() + BANZAI_COOLDOWN_TICKS;
+                long cooldownEnd = player.level().getGameTime() + banzaiCooldownTicks();
                 GunStackData.updateState(gunStack, tag -> tag.putLong(MELEE_COOLDOWN_TAG, cooldownEnd));
             }
         }
@@ -124,7 +132,7 @@ public class MeleeAttackHandler {
         }
     }
 
-    /** Forgets a charge without effects (logout, respawn). */
+    /** Drops any running charge, used on logout and respawn. */
     public static void clearBanzai(ServerPlayer player) {
         BANZAI_STATES.remove(player.getUUID());
         resetSyncedBanzai(player);
@@ -151,8 +159,6 @@ public class MeleeAttackHandler {
             return;
         }
 
-        // Interrupting a reload and leaving the inspect animation happen on the client (S2CMessageMeleeAttack); the
-        // reference drove GeckoLib controllers and sent a C2S packet from here, on the server thread.
         setMeleeCooldown(player, heldItem, gunItem);
 
         player.level().playSound(
@@ -170,7 +176,7 @@ public class MeleeAttackHandler {
             Gun gun = gunItem.getModifiedGun(heldItem);
 
             if (gun.getGeneral().usesCustomMeleeAnimation()) {
-                CompoundTag tag = GunStackData.liveState(heldItem); // Port note
+                CompoundTag tag = GunStackData.liveState(heldItem); // mutable state, drives the GeckoLib animation
                 tag.putBoolean("scguns:IsMelee", true);
                 tag.putLong("MeleeStartTime", System.currentTimeMillis());
                 ModSyncedDataKeys.MELEE.setValue(player, true);
@@ -240,7 +246,7 @@ public class MeleeAttackHandler {
 
 
     public static boolean isMeleeOnCooldown(Player player, ItemStack heldItem) {
-        CompoundTag tag = GunStackData.getState(heldItem); // Port note: read-only copy
+        CompoundTag tag = GunStackData.getState(heldItem); // read-only snapshot
         long currentTime = player.level().getGameTime();
         return tag.contains(MELEE_COOLDOWN_TAG) && currentTime < tag.getLong(MELEE_COOLDOWN_TAG);
     }
@@ -248,7 +254,7 @@ public class MeleeAttackHandler {
     public static void setMeleeCooldown(Player player, ItemStack heldItem, GunItem gunItem) {
         long currentTime = player.level().getGameTime();
         int cooldownTicks = gunItem.getModifiedGun(heldItem).getGeneral().getMeleeCooldownTicks();
-        GunStackData.updateState(heldItem, tag -> tag.putLong(MELEE_COOLDOWN_TAG, currentTime + cooldownTicks)); // Port note
+        GunStackData.updateState(heldItem, tag -> tag.putLong(MELEE_COOLDOWN_TAG, currentTime + cooldownTicks));
     }
     private static float getAttackDamage(ServerPlayer player, ItemStack heldItem, GunItem gunItem, LivingEntity target) {
         float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
@@ -284,14 +290,13 @@ public class MeleeAttackHandler {
         if (!(heldItem.getItem() instanceof GunItem gunItem)) {
             return;
         }
-        float banzaiMultiplier = 1.0F + BANZAI_DAMAGE_PER_LEVEL * gunItem.getBayonetBanzaiLevel(heldItem);
+        float banzaiMultiplier = 1.0F + banzaiDamagePerLevel() * gunItem.getBayonetBanzaiLevel(heldItem);
         DamageSource damageSource = player.serverLevel().damageSources().playerAttack(player);
         boolean hitAny = false;
         for (LivingEntity target : targets) {
-            // The full stab damage plus the built-up damage, then +15% per Banzai level.
-            // The reference used the stab's damage times a speed factor that only the Banzai enchantment raised.
+            // Stab damage plus the built-up charge bonus, then the Banzai multiplier, rounded to 2 decimals.
             float attackDamage = (getAttackDamage(player, heldItem, gunItem, target)
-                    + (float) charge * BANZAI_FULL_CHARGE_DAMAGE) * banzaiMultiplier;
+                    + (float) charge * banzaiFullChargeDamage()) * banzaiMultiplier;
             attackDamage = (float) (Math.round(attackDamage * 100.0) / 100.0);
             if (target.hurt(damageSource, attackDamage)) {
                 hitAny = true;
@@ -343,7 +348,7 @@ public class MeleeAttackHandler {
             player.connection.send(critPacket);
         }
     }
-    /** The impact kick on the attacker's screen; the reference called the client renderer from here. */
+    /** Tells the attacker's client that a bayonet hit landed, so it plays the screen impact kick. */
     private static void sendImpact(ServerPlayer player, ItemStack heldItem) {
         if (((GunItem) heldItem.getItem()).hasBayonet(heldItem)) {
             PacketHandler.getPlayChannel().sendToPlayer(() -> player, new S2CMessageMeleeImpact());
@@ -354,7 +359,7 @@ public class MeleeAttackHandler {
         for (IAttachment.Type type : IAttachment.Type.values()) {
             ItemStack attachmentStack = gunItem.getAttachment(gunStack, type);
             if (attachmentStack.getItem() instanceof BayonetItem) {
-                // Port note: 1.21 enchantments are holders in the stack's ENCHANTMENTS component
+                // 1.21 stores enchantments as holders in the stack's ENCHANTMENTS component.
                 for (Object2IntMap.Entry<Holder<Enchantment>> entry : attachmentStack.getTagEnchantments().entrySet()) {
                     Holder<Enchantment> enchantment = entry.getKey();
                     int level = entry.getIntValue();
@@ -404,10 +409,7 @@ public class MeleeAttackHandler {
             }
         }
     }
-    /**
-     * Runs a player's charge for one server tick (called from the player tick event). The reference ran this from a
-     * timer thread every 50 ms.
-     */
+    /** Advances one player's charge by one server tick. Called every player tick from the server event bus. */
     public static void tickBanzai(ServerPlayer player) {
         BanzaiState state = BANZAI_STATES.get(player.getUUID());
         if (state == null) {
@@ -415,12 +417,12 @@ public class MeleeAttackHandler {
             return;
         }
 
-        // Player movement is client-driven, so getDeltaMovement() is about zero on the server; use the position change.
+        // Movement is client-driven, so getDeltaMovement() is ~0 on the server — measure position delta instead.
         Vec3 position = player.position();
         double distance = position.subtract(state.lastPosition).horizontalDistance();
         state.lastPosition = position;
 
-        // Same slot and item, not an exact stack match: the gun's state data changes while it is held.
+        // Match on slot + item, not the exact stack: the gun's NBT changes while it is held.
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!player.isAlive() || player.getInventory().selected != state.slot || heldItem.getItem() != state.item
                 || !(heldItem.getItem() instanceof GunItem gunItem) || !gunItem.hasBayonet(heldItem)) {
@@ -430,24 +432,24 @@ public class MeleeAttackHandler {
 
         if (player.isSprinting()) {
             state.ticksNotSprinting = 0;
-        } else if (++state.ticksNotSprinting > BANZAI_SPRINT_GRACE_TICKS) {
+        } else if (++state.ticksNotSprinting > banzaiSprintGraceTicks()) {
             stopBanzai(player);
             return;
         }
 
         if (player.isSprinting()) {
-            state.charge = Math.min(1.0, state.charge + distance / BANZAI_FULL_CHARGE_DISTANCE);
+            state.charge = Math.min(1.0, state.charge + distance / banzaiFullChargeDistance());
             syncCharge(player, state);
         }
 
-        // A hit spends the charge and ends it, which starts the shared cooldown
-        if (!findTargetsInCone(player, BANZAI_AOE_RADIUS).isEmpty()) {
-            hitBanzaiTargets(player, findTargetsInCone(player, BANZAI_HIT_RADIUS), state.charge);
+        // A target in range spends the charge, ends it, and starts the shared cooldown.
+        if (!findTargetsInCone(player, banzaiAoeRadius()).isEmpty()) {
+            hitBanzaiTargets(player, findTargetsInCone(player, banzaiHitRadius()), state.charge);
             stopBanzai(player);
         }
     }
 
-    /** The HUD bar reads the charge as a whole percentage; only changes are sent. */
+    /** Pushes the charge to the client as a whole percentage, but only when it actually changed. */
     private static void syncCharge(ServerPlayer player, BanzaiState state) {
         int percent = (int) Math.round(state.charge * 100.0);
         if (ModSyncedDataKeys.BANZAI_CHARGE.getValue(player) != percent) {
@@ -460,11 +462,11 @@ public class MeleeAttackHandler {
         for (IAttachment.Type type : IAttachment.Type.values()) {
             ItemStack attachmentStack = gunItem.getAttachment(gunStack, type);
             if (attachmentStack.getItem() instanceof BayonetItem) {
-                // Port note: 1.21 has no DamageEnchantment#getDamageBonus. modifyDamage with a base of 0 gives the summed
-                // damage bonus of the bayonet's enchantments against this target (Sharpness, Smite, Bane, ...), scaled once.
+                // 1.21 has no DamageEnchantment#getDamageBonus: modifyDamage with base 0 returns the summed
+                // bonus of the bayonet's enchantments against this target (Sharpness, Smite, Bane, ...).
                 if (target.level() instanceof ServerLevel serverLevel) {
                     float damageBonus = EnchantmentHelper.modifyDamage(serverLevel, attachmentStack, target, target.damageSources().generic(), 0.0F);
-                    enchantmentDamage += damageBonus * ENCHANTMENT_DAMAGE_SCALING_FACTOR;
+                    enchantmentDamage += damageBonus * enchantmentDamageScalingFactor();
                 }
                 for (Object2IntMap.Entry<Holder<Enchantment>> entry : attachmentStack.getTagEnchantments().entrySet()) {
                     Holder<Enchantment> enchantment = entry.getKey();
@@ -472,7 +474,7 @@ public class MeleeAttackHandler {
                     if (enchantment.is(top.kristeal.init.ModEnchantments.CORRODED)) {
                         if (isBotEntity(target)) {
                             float corrodedBonus = top.kristeal.event.CorrodedEnchantmentHandler.getBotDamageBonus(level);
-                            enchantmentDamage += corrodedBonus * ENCHANTMENT_DAMAGE_SCALING_FACTOR;
+                            enchantmentDamage += corrodedBonus * enchantmentDamageScalingFactor();
                         }
                     }
                 }
@@ -538,7 +540,7 @@ public class MeleeAttackHandler {
                 .min(Comparator.comparingDouble(player::distanceToSqr))
                 .orElse(null);
     }
-    /** Living targets within the radius and in front of the player (the reference took every direction). */
+    /** All living entities within {@code radius} of the player and inside the forward look cone. */
     private static List<LivingEntity> findTargetsInCone(Player player, double radius) {
         Vec3 position = player.position();
         AABB boundingBox = new AABB(position.subtract(radius, radius, radius), position.add(radius, radius, radius));
@@ -547,8 +549,8 @@ public class MeleeAttackHandler {
         return player.level().getEntitiesOfClass(LivingEntity.class, boundingBox, entity -> {
             if (entity == player || !entity.isAlive()) return false;
             Vec3 toTarget = entity.position().subtract(position).multiply(1, 0, 1);
-            // A target standing inside the player counts as in front
-            return toTarget.lengthSqr() < 1.0E-4 || look.dot(toTarget.normalize()) >= BANZAI_CONE_COS;
+            // A target overlapping the player has no meaningful direction, so count it as in front.
+            return toTarget.lengthSqr() < 1.0E-4 || look.dot(toTarget.normalize()) >= banzaiConeCos();
         });
     }
     private static void damageGunAndAttachments(ItemStack stack, Player player) {
@@ -557,5 +559,3 @@ public class MeleeAttackHandler {
         GunEventBus.damageAttachments(stack, level, player);
     }
 }
-
-

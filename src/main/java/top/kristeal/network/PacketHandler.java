@@ -1,7 +1,6 @@
 package top.kristeal.network;
 
 import top.kristeal.network.message.S2CMessageTurretConfigs;
-import top.kristeal.network.message.S2CMessageProgressionMode;
 import top.kristeal.network.message.S2CMessageEntityCasingEject;
 import top.kristeal.network.message.S2CMessageEntityMuzzleFlash;
 import top.kristeal.network.message.C2SMessageChargeSync;
@@ -48,7 +47,6 @@ public class PacketHandler {
         registrar.playToClient(S2CMessageRaidFlareBurst.TYPE, S2CMessageRaidFlareBurst.STREAM_CODEC, S2CMessageRaidFlareBurst::handle);
         registrar.playToClient(S2CMessageBlood.TYPE, S2CMessageBlood.STREAM_CODEC, S2CMessageBlood::handle);
         registrar.playToClient(S2CMessageTurretConfigs.TYPE, S2CMessageTurretConfigs.STREAM_CODEC, S2CMessageTurretConfigs::handle); // turret tooltips on dedicated servers
-        registrar.playToClient(S2CMessageProgressionMode.TYPE, S2CMessageProgressionMode.STREAM_CODEC, S2CMessageProgressionMode::handle); // Raid / Research mode
         registrar.playToClient(S2CShowTotemAnimationMessage.TYPE, S2CShowTotemAnimationMessage.STREAM_CODEC, S2CShowTotemAnimationMessage::handle);
         registrar.playToClient(S2CMessageMuzzleFlash.TYPE, S2CMessageMuzzleFlash.STREAM_CODEC, S2CMessageMuzzleFlash::handle);
         registrar.playToClient(S2CMessageTurretBulletTrail.TYPE, S2CMessageTurretBulletTrail.STREAM_CODEC, S2CMessageTurretBulletTrail::handle);

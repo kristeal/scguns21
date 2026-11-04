@@ -58,9 +58,6 @@ public class ModCapabilities {
 
         // Processing machines (replacing 1.20.1 BlockEntity#getCapability; side mapping lives in each block entity)
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MACERATOR.get(), MaceratorBlockEntity::getItemHandler);
-        // Research progression: insert-only material buffer
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.RESEARCH_STATION.get(), top.kristeal.blockentity.ResearchStationBlockEntity::getItemHandler);
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.RESEARCH_STATION.get(), top.kristeal.blockentity.ResearchStationBlockEntity::getEnergyStorage);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POWERED_MACERATOR.get(), PoweredMaceratorBlockEntity::getItemHandler);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MECHANICAL_PRESS.get(), MechanicalPressBlockEntity::getItemHandler);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POWERED_MECHANICAL_PRESS.get(), PoweredMechanicalPressBlockEntity::getItemHandler);

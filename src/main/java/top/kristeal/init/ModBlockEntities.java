@@ -30,11 +30,6 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("charged_amethyst_relay", () ->
                     BlockEntityType.Builder.of(ChargedAmethystRelayBlockEntity::new,
                             ModBlocks.CHARGED_AMETHYST_RELAY.get()).build(null));
-    // Research progression
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ResearchStationBlockEntity>> RESEARCH_STATION =
-            BLOCK_ENTITIES.register("research_station", () ->
-                    BlockEntityType.Builder.of(ResearchStationBlockEntity::new,
-                            ModBlocks.RESEARCH_STATION.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GunBenchBlockEntity>> GUN_BENCH =
             BLOCK_ENTITIES.register("gun_bench", () ->
                     BlockEntityType.Builder.of(GunBenchBlockEntity::new,

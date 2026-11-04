@@ -1,6 +1,5 @@
 package top.kristeal.init;
 
-import top.kristeal.progression.ProgressionMode;
 import top.kristeal.item.EnergyGunItem;
 import top.kristeal.common.exosuit.ExoSuitData;
 import net.minecraft.nbt.CompoundTag;
@@ -648,9 +647,6 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModBlocks.LIGHTNING_BATTERY.get());
                         pOutput.accept(ModBlocks.LIGHTNING_ROD_CONNECTOR.get());
                         pOutput.accept(ModBlocks.GUN_BENCH.get());
-                        if (ProgressionMode.isResearch()) { // read when the tab is built (on joining a world)
-                            pOutput.accept(ModBlocks.RESEARCH_STATION.get());
-                        }
                         pOutput.accept(ModBlocks.MACERATOR.get());
                         pOutput.accept(ModBlocks.MECHANICAL_PRESS.get());
                         pOutput.accept(ModBlocks.POWERED_MACERATOR.get());

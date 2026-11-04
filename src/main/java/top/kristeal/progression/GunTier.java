@@ -16,23 +16,17 @@ import java.util.List;
  *     <li>{@code order}: the order tiers are checked in when an item is in several tier tags;</li>
  *     <li>{@code tag}: picking up or crafting an item in it unlocks the tier;</li>
  *     <li>{@code raid_level}: the nightly raids the tier unlocks (every raid up to this level);</li>
- *     <li>{@code mob_tiers}: the tiers whose guns and elite gear mobs may spawn with, most advanced first;</li>
- *     <li>{@code blueprints}: in Research mode, getting one of these unlocks the tier.</li>
+ *     <li>{@code mob_tiers}: the tiers whose guns and elite gear mobs may spawn with, most advanced first.</li>
  * </ul>
  * Port note: the reference hard-coded these in {@code GunTiers}; the bundled JSONs hold the same values.
  */
-public record GunTier(String id, int level, int order, @Nullable TagKey<Item> tag, int raidLevel, List<String> mobTiers, List<Item> blueprints)
+public record GunTier(String id, int level, int order, @Nullable TagKey<Item> tag, int raidLevel, List<String> mobTiers)
 {
-    public static final GunTier NONE = new GunTier("none", 0, -1, null, 0, List.of(), List.of());
+    public static final GunTier NONE = new GunTier("none", 0, -1, null, 0, List.of());
 
     public boolean matches(ItemStack stack)
     {
         return tag != null && stack.is(tag);
-    }
-
-    public boolean isUnlockedBy(ItemStack blueprint)
-    {
-        return blueprints.contains(blueprint.getItem());
     }
 
     public MutableComponent displayName()

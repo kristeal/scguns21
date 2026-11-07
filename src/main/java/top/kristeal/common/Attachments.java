@@ -33,6 +33,16 @@ public class Attachments
             )
             .build();
 
+    // Same buffs as the reflex sight, but no zoom and never rendered: the gun keeps its own iron sights
+    public static final Scope ADJUSTED_IRON_SIGHTS = Scope.builder()
+            .aimFovModifier(1.0F)
+            .modifiers(
+                    GunModifiers.SLOW_ADS,
+                    GunModifiers.REFLEX_SIGHT_CRIT_BONUS,
+                    GunModifiers.REFLEX_SIGHT_ADS_BONUS
+            )
+            .build();
+
     public static final Scope LASER_SIGHT = Scope.builder()
             .aimFovModifier(1.1F)
             .modifiers(

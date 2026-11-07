@@ -992,6 +992,10 @@ public class GunRenderingHandler {
                         continue;
                     }
 
+                    if (attachmentStack.getItem() instanceof IAttachment<?> attachment && !attachment.isVisibleOnGun()) {
+                        continue;
+                    }
+
                     if (!attachmentStack.isEmpty()) {
 
                         poseStack.pushPose();

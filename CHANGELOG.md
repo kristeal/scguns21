@@ -1,0 +1,3 @@
+ - Added option to turn Macerator, Powered Macerator, Stamping Press, Powered Stamping Press while Create is loaded. (This can be turned off in configs, making these items appearn in JEI, and make them craftable agin.)
+ - Added a fake sight mod, that does not change gun sights and only gives stats.
+ - Fixed bayonet reach (it was set to 0.5 so it was kinda uselesss)

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "scguns:anthralite_nugget"
+    },
+    {
+      "item": "scguns:anthralite_nugget"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    }
+  ],
+  "result": {
+    "id": "scguns:adjusted_iron_sights"
+  }
+}

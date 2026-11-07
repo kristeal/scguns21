@@ -460,6 +460,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.WEIRD_FLESH.get());
 
                         // Attachments
+                        pOutput.accept(ModItems.ADJUSTED_IRON_SIGHTS.get());
                         pOutput.accept(ModItems.REFLEX_SIGHT.get());
                         pOutput.accept(ModItems.LASER_SIGHT.get());
                         pOutput.accept(ModItems.MEDIUM_SCOPE.get());

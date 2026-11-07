@@ -5,6 +5,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -17,6 +18,7 @@ import top.kristeal.Reference;
 import top.kristeal.client.screen.*;
 import top.kristeal.init.ModBlocks;
 import top.kristeal.init.ModItems;
+import top.kristeal.recipe.MachineRecipesCondition;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -135,6 +137,18 @@ public class JEIScorchedPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.POWERED_MECHANICAL_PRESS.get()), PoweredMechanicalPressCategory.POWERED_MECHANICAL_PRESS_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.LIGHTNING_BATTERY.get()), LightningBatteryCategory.LIGHTNING_BATTERY_TYPE);
     }
+    /** Hides the Macerator and Stamping Press blocks while their crafting recipes are disabled because of Create. */
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        if (MachineRecipesCondition.machinesDisabled()) {
+            jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, List.of(
+                    new ItemStack(ModBlocks.MACERATOR.get()),
+                    new ItemStack(ModBlocks.POWERED_MACERATOR.get()),
+                    new ItemStack(ModBlocks.MECHANICAL_PRESS.get()),
+                    new ItemStack(ModBlocks.POWERED_MECHANICAL_PRESS.get())));
+        }
+    }
+
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(new GunBenchTransferInfo());

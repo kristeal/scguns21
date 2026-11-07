@@ -721,6 +721,9 @@ public class AnimatedGunRenderer extends GeoItemRenderer<AnimatedGunItem> implem
                 if (CUSTOM_ATTACHMENTS.contains(attachmentStack.getItem())) {
                     continue;
                 }
+                if (attachmentStack.getItem() instanceof IAttachment<?> attachment && !attachment.isVisibleOnGun()) {
+                    continue;
+                }
                 if (!attachmentStack.isEmpty()) {
                     renderSingleAttachment(bone, stack, attachmentStack, type, modifiedGun,
                             poseStack, renderType, renderTypeBuffer, light, partialTicks, packedOverlay);

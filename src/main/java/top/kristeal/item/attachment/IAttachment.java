@@ -32,6 +32,11 @@ public interface IAttachment<T extends Attachment>
         return true;
     }
 
+    default boolean isVisibleOnGun()
+    {
+        return true;
+    }
+
     enum Type
     {
         SCOPE("scope", "Scope", "scope"),

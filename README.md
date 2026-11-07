@@ -10,7 +10,10 @@ Changes in this port:
   - Some smaller bugs from the original mod was fixed.
   - Added compatibiltiy for Sable ( bullets now interact with sable objects and turrets can now target and shoot from sable objects.)
   - Added ability for shotguns to break blocks (can be configured if more than 10 pellets strike one they break, similar to heavier guns)
-  
+  - ADded config to disable the mod's machines, so their functionality is now handled by Create ( mixing, mechanical crafting, shapeless crafting, etc.) , this setting only does something if Create is present.
+  - Added a "fake" sight (adjusted iron sights) that ives the same buffs as the reflex sight, without ACTUALLY modifying gun's sights. 
+
+
 ### Everything else behaves the same, if it doesn't, report it here (I'll add the Discord link back, soon™) !
 
 ## Requirements

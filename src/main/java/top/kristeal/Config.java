@@ -231,6 +231,7 @@ public class Config
         public final Raids raids;
         public final Banzai banzai;
         public final Structures structures;
+        public final Compat compat;
 
 
         public Common(ModConfigSpec.Builder builder)
@@ -250,6 +251,21 @@ public class Config
                 this.raids = new Raids(builder);
                 this.banzai = new Banzai(builder);
                 this.structures = new Structures(builder);
+                this.compat = new Compat(builder);
+            }
+            builder.pop();
+        }
+    }
+
+    public static class Compat {
+        public final ModConfigSpec.BooleanValue disableMachinesWithCreate;
+
+        public Compat(ModConfigSpec.Builder builder) {
+            builder.comment("Compatibility with other mods").push("compat");
+            {
+                this.disableMachinesWithCreate = builder
+                        .comment("If true, the crafting recipes for the Macerator, Stamping Press, Powered Macerator and Powered Stamping Press will be removed. (Only applies when Create is loaded)")
+                        .define("disableMachinesWithCreate", true);
             }
             builder.pop();
         }
@@ -864,6 +880,12 @@ public class Config
         final Pair<Server, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(Server::new);
         serverSpec = serverSpecPair.getRight();
         SERVER = serverSpecPair.getLeft();
+    }
+
+    /** True if the Macerator/Stamping Press recipes should be disabled because Create is present. Defaults to true if the config is not loaded yet. */
+    public static boolean isDisableMachinesWithCreate()
+    {
+        return !commonSpec.isLoaded() || COMMON.compat.disableMachinesWithCreate.get();
     }
 
     public static boolean isClientConfigLoaded()

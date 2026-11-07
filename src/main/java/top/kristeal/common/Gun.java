@@ -2680,6 +2680,10 @@ public class Gun implements IEditorMenu {
                 ItemStack scopeStack = GunStackData.getAttachment(gun, "Scope");
                 Scope scope = null;
                 if (scopeStack.getItem() instanceof ScopeItem scopeItem) {
+                    // Stat-only sights keep the gun's iron sights, ADS camera and FOV
+                    if (!scopeItem.isVisibleOnGun()) {
+                        return null;
+                    }
                     if (ScorchedGuns.isDebugging()) {
                         return Debug.getScope(scopeItem);
                     }

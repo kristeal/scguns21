@@ -1,13 +1,17 @@
 package top.kristeal.init;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import top.kristeal.Reference;
 import top.kristeal.client.screen.*;
+import top.kristeal.recipe.MachineRecipesCondition;
 
 public class ModRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
@@ -47,8 +51,16 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeType<?>, RecipeType<GunBenchRecipe>> GUN_BENCH_TYPE =
             TYPES.register(GunBenchRecipe.Type.ID, () -> GunBenchRecipe.Type.INSTANCE);
 
+    /** Recipe conditions, used in recipe json under "neoforge:conditions". */
+    public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITIONS =
+            DeferredRegister.create(NeoForgeRegistries.CONDITION_SERIALIZERS, Reference.MOD_ID);
+
+    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<MachineRecipesCondition>> MACHINE_RECIPES_ENABLED =
+            CONDITIONS.register("machine_recipes_enabled", () -> MachineRecipesCondition.CODEC);
+
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);
         TYPES.register(eventBus);
+        CONDITIONS.register(eventBus);
     }
 }
